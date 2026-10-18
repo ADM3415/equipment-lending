@@ -1,0 +1,567 @@
+<mxfile host="app.diagrams.net" pages="2">
+  <diagram name="Use-Case diagram" id="g2hrDc1thAItoFjRosYC">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillStyle=hatch;fillColor=#647687;fontColor=#ffffff;strokeColor=#314354;" value="" vertex="1">
+          <mxGeometry height="860" width="1400" x="-640" y="-80" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Record equipment damage or loss" vertex="1">
+          <mxGeometry height="80" width="160" x="-520" y="395" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-15" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Consult equipment availability and location" vertex="1">
+          <mxGeometry height="80" width="160" x="-200" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-16" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Process a return" vertex="1">
+          <mxGeometry height="80" width="160" x="-520" y="158" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-17" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Retry sending an invoice" vertex="1">
+          <mxGeometry height="80" width="160" x="310" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-18" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Consult overdue loans" vertex="1">
+          <mxGeometry height="80" width="160" x="-520" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-19" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Consult loan history" vertex="1">
+          <mxGeometry height="80" width="160" x="-200" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-20" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Register a loan" vertex="1">
+          <mxGeometry height="80" width="160" x="-520" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-21" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Record an external payment" vertex="1">
+          <mxGeometry height="80" width="160" x="-520" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-22" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Record an approved damage/loss charge" vertex="1">
+          <mxGeometry height="80" width="160" x="-213" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-23" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Generate and send an invoice" vertex="1">
+          <mxGeometry height="80" width="160" x="-213" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-24" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f5f5f5;strokeColor=#666666;gradientColor=none;fillStyle=auto;" value="Consult equipment availability" vertex="1">
+          <mxGeometry height="80" width="160" x="480" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-25" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;fillColor=#f5f5f5;strokeColor=#666666;gradientColor=none;fillStyle=auto;" value="Consult current loans" vertex="1">
+          <mxGeometry height="80" width="160" x="480" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-28" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-29" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-30" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-31" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-34" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-710" y="260" />
+              <mxPoint x="-340" y="260" />
+              <mxPoint x="-340" y="170" />
+              <mxPoint x="-213" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-35" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-710" y="260" />
+              <mxPoint x="-340" y="260" />
+              <mxPoint x="-340" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-36" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" target="u88nhwwnzr6yqsGvGf9W-23">
+          <mxGeometry relative="1" x="0.073" as="geometry">
+            <Array as="points">
+              <mxPoint x="-710" y="348.3" />
+              <mxPoint x="-710" y="260" />
+              <mxPoint x="-340" y="260" />
+              <mxPoint x="-340" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QhsLQcrtW0F93xwWXFaW-3" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-26" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#f8cecc;gradientColor=none;strokeColor=#b85450;" value="Lending staff" vertex="1">
+          <mxGeometry height="100" width="60" x="-740" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-41" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-42" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" target="u88nhwwnzr6yqsGvGf9W-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="u88nhwwnzr6yqsGvGf9W-40" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#f5f5f5;strokeColor=#666666;gradientColor=none;fillStyle=auto;" value="&#xa;Teacher&#xa;&#xa;" vertex="1">
+          <mxGeometry height="100" width="60" x="790" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="zf1CokkSGW4oLLlrqhxc-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 36px;&quot;&gt;Equipment Lending Application.&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="570" x="-610" y="-50" as="geometry" />
+        </mxCell>
+        <mxCell id="eligibility" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" value="Check borrowing eligibility" vertex="1">
+          <mxGeometry height="80" width="180" x="-80" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="item-check" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" value="Check item availability and condition" vertex="1">
+          <mxGeometry height="80" width="180" x="170" y="-20" as="geometry" />
+        </mxCell>
+        <mxCell id="send-invoice" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" value="Send invoice" vertex="1">
+          <mxGeometry height="80" width="180" x="100" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="include-eligibility" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=open;endFill=0;dashed=1;fontSize=13;labelBackgroundColor=#ffffff;" target="eligibility" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="include-item" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-20" style="rounded=0;html=1;startArrow=none;endArrow=open;endFill=0;dashed=1;fontSize=13;labelBackgroundColor=#ffffff;edgeStyle=orthogonalEdgeStyle;" target="item-check" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-440" y="20" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="include-send" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=open;endFill=0;dashed=1;fontSize=13;labelBackgroundColor=#ffffff;" target="send-invoice" value="«include»">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-133" y="600" />
+              <mxPoint x="190" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="include-resend" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=open;endFill=0;dashed=1;fontSize=13;labelBackgroundColor=#ffffff;" target="send-invoice" value="«include»">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="staff-consult" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=none;" target="u88nhwwnzr6yqsGvGf9W-15" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-340" y="365" />
+              <mxPoint x="-340" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="staff-retry" edge="1" parent="1" source="u88nhwwnzr6yqsGvGf9W-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;startArrow=none;endArrow=none;curved=0;shape=wire;dashed=1;" target="u88nhwwnzr6yqsGvGf9W-17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="mEcGPIqHDZqQEJnSUMj-" name="Class diagram">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1850" pageHeight="2050" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="class-title" parent="1" style="text;html=1;align=left;fontSize=26;fontStyle=1;" value="Equipment Lending — Class diagram" vertex="1">
+          <mxGeometry height="45" width="1450" x="10" y="-400" as="geometry" />
+        </mxCell>
+        <mxCell id="class-sub" parent="1" style="text;html=1;align=left;fontSize=14;fontColor=#64748b;" value="Attributes and operations • Relationships next • Dates and Decimal are UML types; money is in MAD" vertex="1">
+          <mxGeometry height="30" width="1750" x="10" y="-350" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-2" edge="1" parent="1" source="class-Member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=block;startFill=0;dashed=1;dashPattern=8 8;" target="class-Staff">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-3" edge="1" parent="1" source="class-Member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=block;startFill=0;dashed=1;dashPattern=8 8;" target="class-Teacher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-29" edge="1" parent="1" source="class-Member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;startArrow=none;endArrow=none;dashed=0;" target="class-Loan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-31" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.9041" y="2" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-32" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;returnedBy&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1196" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-30" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..1" vertex="1">
+          <mxGeometry relative="1" x="-0.9" y="-12" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-Member" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#dae8fc;strokeColor=#475569;" value="«interface»&lt;br&gt;Member" vertex="1">
+          <mxGeometry height="166" width="410" x="2050" y="-60" as="geometry" />
+        </mxCell>
+        <mxCell id="Member-attributes" parent="class-Member" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Member-operations" parent="class-Member" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): MemberType&lt;/div&gt;" vertex="1">
+          <mxGeometry height="76" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-7" edge="1" parent="1" source="class-Student" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-Loan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-10" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.8049" y="-3" as="geometry">
+            <mxPoint x="-31" y="-4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-20" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.9261" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-Student" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#dae8fc;strokeColor=#475569;" value="Student" vertex="1">
+          <mxGeometry height="262" width="410" x="1590" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="Student-attributes" parent="class-Student" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- fullName: String&lt;br&gt;- universityEmail: String&lt;br&gt;- active: boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="96" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Student-operations" parent="class-Student" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): MemberType&lt;br&gt;+ getUniversityEmail(): String&lt;br&gt;+ isActive(): boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="116" width="410" y="146" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-13" edge="1" parent="1" source="class-Staff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;endArrow=none;dashed=0;" target="class-Loan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-14" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.8067" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-21" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.827" y="3" as="geometry">
+            <mxPoint x="-3" y="-16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-22" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;registeredBy&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.4076" y="2" as="geometry">
+            <mxPoint x="108" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-23" edge="1" parent="1" source="class-Staff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;startArrow=none;endArrow=none;dashed=0;" target="class-Loan">
+          <mxGeometry relative="1" x="0.062" as="geometry">
+            <Array as="points">
+              <mxPoint x="2350" y="582" />
+              <mxPoint x="2350" y="661" />
+              <mxPoint x="2257.5" y="661" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-24" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;returnProcessedBy&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.5031" y="-1" as="geometry">
+            <mxPoint x="-101" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-25" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..1" vertex="1">
+          <mxGeometry relative="1" x="-0.7996" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-26" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.7713" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-Staff" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#dae8fc;strokeColor=#475569;" value="Staff" vertex="1">
+          <mxGeometry height="182" width="410" x="2090" y="188" as="geometry" />
+        </mxCell>
+        <mxCell id="Staff-attributes" parent="class-Staff" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- fullName: String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="56" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Staff-operations" parent="class-Staff" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): MemberType&lt;/div&gt;" vertex="1">
+          <mxGeometry height="76" width="410" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="class-Teacher" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#dae8fc;strokeColor=#475569;" value="Teacher" vertex="1">
+          <mxGeometry height="182" width="410" x="2530" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="Teacher-attributes" parent="class-Teacher" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- fullName: String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="56" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Teacher-operations" parent="class-Teacher" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): MemberType&lt;/div&gt;" vertex="1">
+          <mxGeometry height="76" width="410" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-15" edge="1" parent="1" source="class-Item" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-Loan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-17" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.85" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-18" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.852" y="-1" as="geometry">
+            <mxPoint x="-3" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-Item" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#475569;" value="Item" vertex="1">
+          <mxGeometry height="342" width="410" x="1090" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="Item-attributes" parent="class-Item" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- name: String&lt;br&gt;- type: ItemType&lt;br&gt;- storageLocation: String&lt;br&gt;- condition: ItemCondition&lt;br&gt;- status: ItemStatus&lt;/div&gt;" vertex="1">
+          <mxGeometry height="136" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Item-operations" parent="class-Item" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): ItemType&lt;br&gt;+ getStorageLocation(): String&lt;br&gt;+ getCondition(): ItemCondition&lt;br&gt;+ getStatus(): ItemStatus&lt;br&gt;+ isAvailable(): boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="156" width="410" y="186" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-33" edge="1" parent="1" source="class-Loan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-StudentCharge">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2530" y="951" />
+              <mxPoint x="2530" y="911" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-34" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;charges&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1008" y="5" as="geometry">
+            <mxPoint x="4" y="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-35" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.7544" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-36" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.7298" y="-1" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-Loan" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#475569;" value="Loan" vertex="1">
+          <mxGeometry height="422" width="410" x="1950" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="Loan-attributes" parent="class-Loan" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- borrowDate: Date&lt;br&gt;- dueDate: Date&lt;br&gt;- returnDate: Date [0..1]&lt;br&gt;- lossReportedDate: Date [0..1]&lt;br&gt;- status: LoanStatus&lt;br&gt;- returnCondition: ItemCondition [0..1]&lt;br&gt;- returnDescription: String [0..1]&lt;/div&gt;" vertex="1">
+          <mxGeometry height="176" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Loan-operations" parent="class-Loan" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getBorrowDate(): Date&lt;br&gt;+ getDueDate(): Date&lt;br&gt;+ getReturnDate(): Date [0..1]&lt;br&gt;+ getLossReportedDate(): Date [0..1]&lt;br&gt;+ getStatus(): LoanStatus&lt;br&gt;+ getReturnCondition(): ItemCondition [0..1]&lt;br&gt;+ getReturnDescription(): String [0..1]&lt;br&gt;+ isOverdue(onDate: Date): boolean&lt;/div&gt;" vertex="1">
+          <mxGeometry height="196" width="410" y="226" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-37" edge="1" parent="1" source="class-StudentCharge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-Invoice">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-38" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;invoice&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.001" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-39" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.8115" y="3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-40" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..1" vertex="1">
+          <mxGeometry relative="1" x="0.8188" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-StudentCharge" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#475569;" value="StudentCharge" vertex="1">
+          <mxGeometry height="462" width="410" x="2890" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="StudentCharge-attributes" parent="class-StudentCharge" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- type: ChargeType&lt;br&gt;- amount: Decimal&lt;br&gt;- description: String&lt;br&gt;- isPaid: boolean&lt;br&gt;- amountPaid: Decimal [0..1]&lt;br&gt;- paymentDate: Date [0..1]&lt;br&gt;- receiptReference: String [0..1]&lt;/div&gt;" vertex="1">
+          <mxGeometry height="176" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="StudentCharge-operations" parent="class-StudentCharge" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getType(): ChargeType&lt;br&gt;+ getAmount(): Decimal&lt;br&gt;+ getDescription(): String&lt;br&gt;+ isPaid(): boolean&lt;br&gt;+ getAmountPaid(): Decimal [0..1]&lt;br&gt;+ getPaymentDate(): Date [0..1]&lt;br&gt;+ getReceiptReference(): String [0..1]&lt;br&gt;+ recordPayment(amount: Decimal,&lt;br&gt;    date: Date, receipt: String,&lt;br&gt;    processedBy: Staff): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="236" width="410" y="226" as="geometry" />
+        </mxCell>
+        <mxCell id="class-Invoice" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#475569;" value="Invoice" vertex="1">
+          <mxGeometry height="262" width="410" x="3260" y="106" as="geometry" />
+        </mxCell>
+        <mxCell id="Invoice-attributes" parent="class-Invoice" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- issuedDate: Date&lt;br&gt;- isSent: boolean&lt;br&gt;- lastSendAttemptAt: DateTime [0..1]&lt;/div&gt;" vertex="1">
+          <mxGeometry height="96" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Invoice-operations" parent="class-Invoice" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ issuedDate(): Date&lt;br&gt;+ isSent(): boolean&lt;br&gt;+ getLastSendAttemptAt(): DateTime [0..1]&lt;br&gt;+ toString(): String&lt;/div&gt;" vertex="1">
+          <mxGeometry height="116" width="410" y="146" as="geometry" />
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-1" edge="1" parent="1" source="class-LoanRegistrationService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=open;endFill=0;startArrow=none;dashed=0;" target="class-LoanRepository">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-2" connectable="0" parent="2lmYX87dajXjXRa3-bAN-1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;loanRepository&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1082" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-3" connectable="0" parent="2lmYX87dajXjXRa3-bAN-1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.7881" y="3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-4" edge="1" parent="1" source="class-LoanRegistrationService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=open;endFill=0;startArrow=none;dashed=0;" target="class-ChargeRepository">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-5" connectable="0" parent="2lmYX87dajXjXRa3-bAN-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.9305" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-6" connectable="0" parent="2lmYX87dajXjXRa3-bAN-4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;chargeRepository&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.3318" as="geometry">
+            <mxPoint x="54" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-1" edge="1" parent="1" source="class-LoanRegistrationService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="Student-operations">
+          <mxGeometry relative="1" x="-0.8853" as="geometry">
+            <Array as="points">
+              <mxPoint x="2430" y="1220" />
+              <mxPoint x="1590" y="1220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-2" edge="1" parent="1" source="class-LoanRegistrationService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="class-Item">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-3" edge="1" parent="1" source="class-LoanRegistrationService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="class-Loan">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="class-LoanRegistrationService" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#ffe6cc;strokeColor=#475569;" value="LoanRegistrationService" vertex="1">
+          <mxGeometry height="146" width="410" x="2430" y="1200" as="geometry" />
+        </mxCell>
+        <mxCell id="LoanRegistrationService-attributes" parent="class-LoanRegistrationService" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="LoanRegistrationService-operations" parent="class-LoanRegistrationService" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ registerLoan(student: Student,&lt;br&gt;    item: Item, registeredBy: Staff): Loan&lt;/div&gt;" vertex="1">
+          <mxGeometry height="56" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-7" edge="1" parent="1" source="class-ReturnService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=open;endFill=0;startArrow=none;dashed=0;" target="class-InvoiceSender">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-8" connectable="0" parent="2lmYX87dajXjXRa3-bAN-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="0.8784" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2lmYX87dajXjXRa3-bAN-9" connectable="0" parent="2lmYX87dajXjXRa3-bAN-7" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;sender&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0252" y="-7" as="geometry">
+            <mxPoint x="-1" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-7" edge="1" parent="1" source="class-ReturnService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="class-Member">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1060" y="1063" />
+              <mxPoint x="1060" y="-80" />
+              <mxPoint x="2050" y="-80" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-8" edge="1" parent="1" source="class-ReturnService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="class-Staff">
+          <mxGeometry relative="1" x="0.0002" as="geometry">
+            <Array as="points">
+              <mxPoint x="970" y="930" />
+              <mxPoint x="970" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="class-ReturnService" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#ffe6cc;strokeColor=#475569;" value="ReturnService" vertex="1">
+          <mxGeometry height="286" width="410" x="390" y="930" as="geometry" />
+        </mxCell>
+        <mxCell id="ReturnService-attributes" parent="class-ReturnService" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ReturnService-operations" parent="class-ReturnService" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ processReturn(loan: Loan,&lt;br&gt;    returnedBy: Member, processedBy: Staff,&lt;br&gt;    condition: ItemCondition,&lt;br&gt;    description: String): void&lt;br&gt;+ reportLoss(loan: Loan,&lt;br&gt;    processedBy: Staff,&lt;br&gt;    description: String): void&lt;br&gt;+ calculateLateFee(loan: Loan,&lt;br&gt;    onDate: Date): Decimal&lt;/div&gt;" vertex="1">
+          <mxGeometry height="196" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="class-LoanRepository" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#e1d5e7;strokeColor=#475569;" value="«interface»&lt;br&gt;LoanRepository" vertex="1">
+          <mxGeometry height="146" width="410" x="2700" y="1480" as="geometry" />
+        </mxCell>
+        <mxCell id="LoanRepository-attributes" parent="class-LoanRepository" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="LoanRepository-operations" parent="class-LoanRepository" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ findByStudentId(studentId: int): List&amp;lt;Loan&amp;gt;&lt;br&gt;+ save(loan: Loan): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="56" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="class-ChargeRepository" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#e1d5e7;strokeColor=#475569;" value="«interface»&lt;br&gt;ChargeRepository" vertex="1">
+          <mxGeometry height="166" width="410" x="2150" y="1480" as="geometry" />
+        </mxCell>
+        <mxCell id="ChargeRepository-attributes" parent="class-ChargeRepository" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ChargeRepository-operations" parent="class-ChargeRepository" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ findByStudentId(studentId: int):&lt;br&gt;    List&amp;lt;StudentCharge&amp;gt;&lt;br&gt;+ save(charge: StudentCharge): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="76" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-4" edge="1" parent="1" source="class-InvoiceSender" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;dashed=1;dashPattern=8 8;startArrow=block;startFill=0;" target="class-EmailInvoiceSender">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="class-InvoiceSender" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#fff2cc;strokeColor=#475569;" value="«interface»&lt;br&gt;InvoiceSender" vertex="1">
+          <mxGeometry height="130" width="410" x="80" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="InvoiceSender-attributes" parent="class-InvoiceSender" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="InvoiceSender-operations" parent="class-InvoiceSender" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ send(invoice: Invoice): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="class-EmailInvoiceSender" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#fff2cc;strokeColor=#475569;" value="EmailInvoiceSender" vertex="1">
+          <mxGeometry height="130" width="410" x="80" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="EmailInvoiceSender-attributes" parent="class-EmailInvoiceSender" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="" vertex="1">
+          <mxGeometry height="40" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="EmailInvoiceSender-operations" parent="class-EmailInvoiceSender" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ send(invoice: Invoice): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="410" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-MemberType" parent="1" style="swimlane;html=1;startSize=50;horizontal=1;collapsible=0;fontStyle=1;fontSize=16;fillColor=#f1f5f9;strokeColor=#475569;" value="«enumeration»&lt;br&gt;MemberType" vertex="1">
+          <mxGeometry height="170" width="410" x="70" y="1940" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-MemberType-values" parent="enum-MemberType" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;STUDENT&lt;br&gt;STAFF&lt;br&gt;TEACHER&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ItemType" parent="1" style="swimlane;html=1;startSize=50;horizontal=1;collapsible=0;fontStyle=1;fontSize=16;fillColor=#f1f5f9;strokeColor=#475569;" value="«enumeration»&lt;br&gt;ItemType" vertex="1">
+          <mxGeometry height="170" width="410" x="520" y="1940" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ItemType-values" parent="enum-ItemType" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;LAPTOP&lt;br&gt;CAMERA&lt;br&gt;PROJECTOR&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ItemCondition" parent="1" style="swimlane;html=1;startSize=50;horizontal=1;collapsible=0;fontStyle=1;fontSize=16;fillColor=#f1f5f9;strokeColor=#475569;" value="«enumeration»&lt;br&gt;ItemCondition" vertex="1">
+          <mxGeometry height="170" width="410" x="400" y="1350" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ItemCondition-values" parent="enum-ItemCondition" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;GOOD&lt;br&gt;PHYSICAL_DAMAGE&lt;br&gt;SOFTWARE_ISSUE&lt;br&gt;UNSPECIFIED_DAMAGE&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ItemStatus" parent="1" style="swimlane;html=1;startSize=50;horizontal=1;collapsible=0;fontStyle=1;fontSize=16;fillColor=#f1f5f9;strokeColor=#475569;" value="«enumeration»&lt;br&gt;ItemStatus" vertex="1">
+          <mxGeometry height="170" width="410" x="70" y="2160" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ItemStatus-values" parent="enum-ItemStatus" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;IN_STOCK&lt;br&gt;ON_LOAN&lt;br&gt;LOST&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-LoanStatus" parent="1" style="swimlane;html=1;startSize=50;horizontal=1;collapsible=0;fontStyle=1;fontSize=16;fillColor=#f1f5f9;strokeColor=#475569;" value="«enumeration»&lt;br&gt;LoanStatus" vertex="1">
+          <mxGeometry height="170" width="410" x="520" y="2160" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-LoanStatus-values" parent="enum-LoanStatus" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;ACTIVE&lt;br&gt;RETURNED&lt;br&gt;CLOSED_LOST&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ChargeType" parent="1" style="swimlane;html=1;startSize=50;horizontal=1;collapsible=0;fontStyle=1;fontSize=16;fillColor=#f1f5f9;strokeColor=#475569;" value="«enumeration»&lt;br&gt;ChargeType" vertex="1">
+          <mxGeometry height="170" width="410" x="970" y="2160" as="geometry" />
+        </mxCell>
+        <mxCell id="enum-ChargeType-values" parent="enum-ChargeType" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;LATE_FEE&lt;br&gt;DAMAGE&lt;br&gt;LOSS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="410" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-1" edge="1" parent="1" source="class-Member" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;dashPattern=8 8;startArrow=block;startFill=0;endArrow=none;endFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="class-Student">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-41" edge="1" parent="1" source="class-Staff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-StudentCharge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-42" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..1" vertex="1">
+          <mxGeometry relative="1" x="-0.9113" y="-3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-43" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0..*" vertex="1">
+          <mxGeometry relative="1" x="0.9193" y="3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-46" connectable="0" parent="9-fH8_A1mXdU8JSBmbrX-41" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;code&gt;paymentRecordedBy&lt;/code&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1767" y="5" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-44" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;Loan / Student&amp;nbsp;&lt;/span&gt;&lt;/h1&gt;&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff)); font-size: 12px; font-weight: normal;&quot;&gt;at most 2 active loans per student&lt;/span&gt;&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="120" width="200" x="3250" y="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="9-fH8_A1mXdU8JSBmbrX-45" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;Loan / Item&lt;/span&gt;&lt;/h1&gt;&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff)); font-size: 12px; font-weight: normal;&quot;&gt;at most 1 active loan per item.&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff)); font-size: 12px; font-weight: normal;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="120" width="200" x="3250" y="1480" as="geometry" />
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-4" edge="1" parent="1" source="class-LoanRegistrationService" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="class-Staff">
+          <mxGeometry relative="1" x="0.0591" as="geometry" />
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-6" edge="1" parent="1" source="ReturnService-operations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="Loan-operations">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27L0Q2sJfxi7DHwujmIH-9" edge="1" parent="1" source="ReturnService-operations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="enum-ItemCondition">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
