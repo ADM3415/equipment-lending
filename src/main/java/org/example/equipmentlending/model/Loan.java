@@ -135,4 +135,28 @@ public class Loan {
                 this.returnDescription = description;
                 this.status = LoanStatus.RETURNED;
             }
+            public void markAsLost( Member returnedBy,Staff processedBy,String description,LocalDate lossReportedDate){
+                if(this.status != LoanStatus.ACTIVE){
+                    throw new IllegalStateException("Loan is not active so it can not be reported as lost.");
+                }
+                if(returnedBy == null){
+                    throw new IllegalArgumentException("Loan must be returned by someone.");
+                }
+                if(processedBy == null){
+                    throw new IllegalArgumentException("Loan must be proccesed by someone.");
+                }
+                if(lossReportedDate == null){
+                    throw new IllegalArgumentException("Loan must have a return date.");
+                }
+                if(lossReportedDate.isBefore(this.borrowDate)){
+                    throw new IllegalArgumentException("Loss report date cannot be before borrowing date.");
+                }
+                if(description == null || description.isBlank()){
+                    throw new IllegalArgumentException("Please describe the loss.");
+                }
+                this.lossReportedDate = LocalDate.now();
+                this.returnProcessedBy = processedBy;
+                this.returnDescription = description;
+                this.status = LoanStatus.CLOSED_LOST;
+            }
 }

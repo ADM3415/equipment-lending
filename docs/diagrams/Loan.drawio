@@ -287,13 +287,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="class-Item" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#475569;" value="Item" vertex="1">
-          <mxGeometry height="402" width="410" x="1090" y="670" as="geometry" />
+          <mxGeometry height="422" width="410" x="1090" y="670" as="geometry" />
         </mxCell>
         <mxCell id="Item-attributes" parent="class-Item" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- name: String&lt;br&gt;- type: ItemType&lt;br&gt;- storageLocation: String&lt;br&gt;- condition: ItemCondition&lt;br&gt;- status: ItemStatus&lt;/div&gt;" vertex="1">
           <mxGeometry height="136" width="410" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="Item-operations" parent="class-Item" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): ItemType&lt;br&gt;+ getStorageLocation(): String&lt;br&gt;+ getCondition(): ItemCondition&lt;br&gt;+ getStatus(): ItemStatus&lt;br&gt;+ isAvailable(): boolean&lt;br&gt;+ markAsLoaned(): void&lt;br&gt;+ markAsReturned(&lt;br&gt;    condition: ItemCondition): void&lt;/div&gt;" vertex="1">
-          <mxGeometry height="216" width="410" y="186" as="geometry" />
+        <mxCell id="Item-operations" parent="class-Item" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getName(): String&lt;br&gt;+ getType(): ItemType&lt;br&gt;+ getStorageLocation(): String&lt;br&gt;+ getCondition(): ItemCondition&lt;br&gt;+ getStatus(): ItemStatus&lt;br&gt;+ isAvailable(): boolean&lt;br&gt;+ markAsLoaned(): void&lt;br&gt;+ markAsReturned(&lt;br&gt;    condition: ItemCondition): void&lt;br&gt;+ markAsLost(): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="236" width="410" y="186" as="geometry" />
         </mxCell>
         <mxCell id="9-fH8_A1mXdU8JSBmbrX-33" edge="1" parent="1" source="class-Loan" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-StudentCharge">
           <mxGeometry relative="1" as="geometry">
@@ -319,13 +319,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="class-Loan" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=0;marginBottom=0;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#475569;" value="Loan" vertex="1">
-          <mxGeometry height="422" width="410" x="1950" y="740" as="geometry" />
+          <mxGeometry height="582" width="410" x="1950" y="740" as="geometry" />
         </mxCell>
-        <mxCell id="Loan-attributes" parent="class-Loan" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- borrowDate: Date&lt;br&gt;- dueDate: Date&lt;br&gt;- returnDate: Date [0..1]&lt;br&gt;- lossReportedDate: Date [0..1]&lt;br&gt;- status: LoanStatus&lt;br&gt;- returnCondition: ItemCondition [0..1]&lt;br&gt;- returnDescription: String [0..1]&lt;/div&gt;" vertex="1">
+        <mxCell id="Loan-attributes" parent="class-Loan" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;- id: int&lt;br&gt;- borrowDate: LocalDate&lt;br&gt;- dueDate: LocalDate&lt;br&gt;- returnDate: LocalDate [0..1]&lt;br&gt;- lossReportedDate: LocalDate [0..1]&lt;br&gt;- status: LoanStatus&lt;br&gt;- returnCondition: ItemCondition [0..1]&lt;br&gt;- returnDescription: String [0..1]&lt;/div&gt;" vertex="1">
           <mxGeometry height="176" width="410" y="50" as="geometry" />
         </mxCell>
-        <mxCell id="Loan-operations" parent="class-Loan" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getBorrowDate(): Date&lt;br&gt;+ getDueDate(): Date&lt;br&gt;+ getReturnDate(): Date [0..1]&lt;br&gt;+ getLossReportedDate(): Date [0..1]&lt;br&gt;+ getStatus(): LoanStatus&lt;br&gt;+ getReturnCondition(): ItemCondition [0..1]&lt;br&gt;+ getReturnDescription(): String [0..1]&lt;br&gt;+ isOverdue(onDate: Date): boolean&lt;/div&gt;" vertex="1">
-          <mxGeometry height="196" width="410" y="226" as="geometry" />
+        <mxCell id="Loan-operations" parent="class-Loan" style="text;html=1;align=left;verticalAlign=top;spacingLeft=10;spacingTop=8;fillColor=#ffffff;strokeColor=#475569;fontSize=13;overflow=hidden;" value="&lt;div style=&quot;font-family:monospace;line-height:20px;white-space:pre;&quot;&gt;+ getId(): int&lt;br&gt;+ getBorrowDate(): LocalDate&lt;br&gt;+ getDueDate(): LocalDate&lt;br&gt;+ getReturnDate(): LocalDate [0..1]&lt;br&gt;+ getLossReportedDate(): LocalDate [0..1]&lt;br&gt;+ getStatus(): LoanStatus&lt;br&gt;+ getReturnCondition(): ItemCondition [0..1]&lt;br&gt;+ getReturnDescription(): String [0..1]&lt;br&gt;+ isOverdue(onDate: LocalDate): boolean&lt;br&gt;+ markAsReturned(returnedBy: Member,&lt;br&gt;    processedBy: Staff,&lt;br&gt;    returnDate: LocalDate,&lt;br&gt;    condition: ItemCondition,&lt;br&gt;    description: String): void&lt;br&gt;+ markAsLost(processedBy: Staff,&lt;br&gt;    lossReportedDate: LocalDate,&lt;br&gt;    description: String): void&lt;/div&gt;" vertex="1">
+          <mxGeometry height="356" width="410" y="226" as="geometry" />
         </mxCell>
         <mxCell id="9-fH8_A1mXdU8JSBmbrX-37" edge="1" parent="1" source="class-StudentCharge" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=none;dashed=0;" target="class-Invoice">
           <mxGeometry relative="1" as="geometry" />
@@ -562,7 +562,7 @@
         <mxCell id="27L0Q2sJfxi7DHwujmIH-9" edge="1" parent="1" source="ReturnService-operations" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" target="enum-ItemCondition">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-      </root>
+      <mxCell id="loan-closure-note" value="Loan closure details:&lt;br&gt;returnProcessedBy and returnDescription&lt;br&gt;record both returns and loss reports.&lt;br&gt;For loss: status = CLOSED_LOST;&lt;br&gt;lossReportedDate is recorded;&lt;br&gt;returnDate, returnedBy and&lt;br&gt;returnCondition remain null." style="shape=note;whiteSpace=wrap;html=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;align=left;spacing=10;fontSize=13;" vertex="1" parent="1"><mxGeometry x="1090" y="1150" width="410" height="190" as="geometry" /></mxCell></root>
     </mxGraphModel>
   </diagram>
 </mxfile>
