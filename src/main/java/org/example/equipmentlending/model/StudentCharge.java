@@ -1,19 +1,17 @@
 package org.example.equipmentlending.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentCharge {
     private Loan loan;
-    private Staff paymentRecordedBy;
     private final int id;
     private ChargeType type;
     private BigDecimal amount;
     private String description;
     private boolean isPaid;
-    private BigDecimal amountPaid;
-    private LocalDate paymentDate;
-    private String receiptReference;
+    private final List<Payment> payments = new ArrayList<>();
     public StudentCharge(int id, Loan loan, ChargeType type, BigDecimal amount, String description){
         if(id <= 0){
             throw new IllegalArgumentException("Id must be positive.");
@@ -35,12 +33,54 @@ public class StudentCharge {
         this.type = type;
         this.amount = amount;
         this.description = description;
-        this.amountPaid = BigDecimal.ZERO;
-        this.paymentDate = null;
-        this.receiptReference = null;
         this.isPaid = false;
     }
-    public void recordPayment(BigDecimal amountPaid, LocalDate paymentDate,String receiptReference, Staff processedBy){
-        
+    public int getId(){
+        return this.id;
     }
-}    
+    public boolean isPaid(){
+        return this.isPaid;
+    }
+    public BigDecimal getRemainingAmount() {
+        return this.amount.subtract(getTotalPaid());
+    }
+    public List<Payment> getPayments() {
+        return List.copyOf(this.payments);
+    }
+    public Loan getLoan(){
+        return this.loan;
+    }
+    public ChargeType getChargeType(){
+        return this.type;
+    }
+    public BigDecimal getAmount(){
+        return this.amount;
+    }
+    public String getDescription(){
+        return this.description;
+    }
+    public BigDecimal getTotalPaid(){
+        BigDecimal total = BigDecimal.ZERO;
+        for( Payment payment : payments){
+            total = total.add(payment.getAmount());
+        }
+        return total;
+    }
+    public void addPayment(Payment payment) {
+        if(payment == null){
+            throw new IllegalArgumentException("Payment must not be null.");
+        }
+        BigDecimal newTotal = getTotalPaid().add(payment.getAmount());
+        if(isPaid){
+            throw new IllegalStateException("Charge is already fully paid.");
+        }
+        if(newTotal.compareTo(amount) > 0) {
+            throw new IllegalArgumentException("Payment exceeds the remaining amount.");
+        }
+        if(payments.contains(payment)) {
+            throw new IllegalArgumentException("Payment has already been recorded.");
+        }
+        this.payments.add(payment);
+        this.isPaid = newTotal.compareTo(amount) == 0;
+    }
+}
