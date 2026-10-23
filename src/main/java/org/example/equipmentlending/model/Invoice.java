@@ -9,7 +9,7 @@ public class Invoice {
     private final LocalDate issuedDate;
     private boolean isSent;
     private LocalDateTime lastSendAttemptAt;
-    public Invoice(int id, StudentCharge charge, LocalDate issueDate){
+    public Invoice(int id, StudentCharge charge, LocalDate issueDate, boolean isSent, LocalDateTime lastSendAttemptAt){
         if(id<=0){
             throw new IllegalArgumentException("Id must be positive.");
         }
@@ -22,8 +22,11 @@ public class Invoice {
         this.id = id;
         this.charge = charge;
         this.issuedDate = issueDate;
-        this.isSent = false;
-        this.lastSendAttemptAt = null;
+        this.isSent = isSent;
+        this.lastSendAttemptAt = lastSendAttemptAt;
+    }
+    public Invoice(int id, StudentCharge charge, LocalDate issueDate){
+        this(id, charge, issueDate, false, null);
     }
     public int getId(){
         return this.id;
