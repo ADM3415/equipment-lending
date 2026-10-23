@@ -5,6 +5,5 @@ import org.example.equipmentlending.model.Loan;
 
 public interface LoanRepository {
     List<Loan> findByStudentId(int studentId);
-
     void save(Loan loan);
 }

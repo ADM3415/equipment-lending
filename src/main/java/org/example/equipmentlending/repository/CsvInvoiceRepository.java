@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.List;
+import java.nio.file.NoSuchFileException;
+import java.util.ArrayList;
 
 import org.example.equipmentlending.model.Invoice;
 import org.example.equipmentlending.model.StudentCharge;
@@ -16,6 +18,7 @@ import org.example.equipmentlending.model.StudentCharge;
 public class CsvInvoiceRepository implements InvoiceRepository{
     private final Path filePath;
     private final ChargeRepository chargeRepository;
+    private static final String HEADER ="id,chargeId,issuedDate,isSent,lastSendAttemptAt";
     public CsvInvoiceRepository(Path filePath, ChargeRepository chargeRepository){
         if(filePath == null){
             throw new IllegalArgumentException("File path must not be null.");
@@ -33,6 +36,12 @@ public class CsvInvoiceRepository implements InvoiceRepository{
         }
         try{
             List<String> lines = Files.readAllLines(this.filePath,StandardCharsets.UTF_8);
+            if(lines.isEmpty()){
+                return Optional.empty();
+            }
+            if(!lines.get(0).equals(HEADER)){
+                throw new IllegalStateException("Invalid invoice CSV header.");
+            }
             for (int i = 1; i < lines.size(); i++) {
                 String line = lines.get(i);
                 if (line.isBlank()){
@@ -62,12 +71,67 @@ public class CsvInvoiceRepository implements InvoiceRepository{
             }
             return Optional.empty();
         }
+        catch (NoSuchFileException exception){
+            return Optional.empty();
+        }
         catch(IOException exception){
             throw new UncheckedIOException("Could not read invoices from "+this.filePath,exception);
         }
     }
     @Override 
     public void save(Invoice invoice){
-        throw new UnsupportedOperationException("not yet implemented.");
+        if(invoice == null){
+            throw new IllegalArgumentException("Invoice must not be null.");
+        }
+        String row = invoice.getId() + ","
+            + invoice.getCharge().getId() + ","
+            + invoice.getIssuedDate() + ","
+            + invoice.isSent() + ","
+            + (invoice.getLastSendAttemptAt() == null ? "" : invoice.getLastSendAttemptAt().toString());
+        boolean found = false;
+        try{
+            Path parent = filePath.toAbsolutePath().getParent();
+            Files.createDirectories(parent);
+            List<String> lines;
+            try{
+                lines = new ArrayList<>(
+                    Files.readAllLines(filePath, StandardCharsets.UTF_8)
+                );
+            }
+            catch(NoSuchFileException exception){
+                lines = new ArrayList<>();
+            }
+            if(lines.isEmpty()){
+                lines.add(HEADER);
+            } 
+            else if(!lines.get(0).equals(HEADER)) {
+                throw new IllegalStateException("Invalid invoice CSV header.");
+            }
+            for(int i = 1; i < lines.size(); i++){
+                String line = lines.get(i);
+                if(line.isBlank()){
+                    continue;
+                }
+                String[] fields = line.split(",", -1);
+                if(fields.length != 5){
+                    throw new IllegalStateException(
+                        "Invalid invoice CSV row at line " + (i + 1)
+                    );
+                }
+                int existingId = Integer.parseInt(fields[0]);
+                if (existingId == invoice.getId()) {
+                    lines.set(i, row);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                lines.add(row);
+            }
+            Files.write(filePath, lines, StandardCharsets.UTF_8);
+        }
+        catch(IOException exception){
+            throw new UncheckedIOException("Could not read invoices from "+this.filePath,exception);
+        }
     }
 }
