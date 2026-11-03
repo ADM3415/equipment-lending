@@ -2,7 +2,7 @@
 
 A software engineering learning project for recording student equipment loans, returns, charges, and invoices.
 
-Status: requirements and UML design in progress; application implementation has not started.
+Status: requirements and UML design done; application implementation done, Database implementation in progress.
 
 ## Project layout
 
@@ -18,10 +18,3 @@ Status: requirements and UML design in progress; application implementation has 
 ## Development
 
 Use JDK 25 and Maven. Open this folder in VS Code. The Maven compiler targets Java 25.
-
-
-The starter does not create a GitHub repository or configure a remote automatically.
-
-## Diagram workflow
-
-Edit `docs/diagrams/Loan.drawio`, save it, and commit the change. This is a snapshot of the Drive diagram, not a live sync. Export PNG or PDF previews alongside it when useful for reviews.
