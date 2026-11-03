@@ -64,40 +64,7 @@ public class JdbcStudentRepository implements StudentRepository {
         }
     }
 
-    @Override
-    public void save(Student student) {
-        if (student == null) {
-            throw new IllegalArgumentException(
-                "Student must not be null."
-            );
-        }
-
-        try {
-            if (connection.getAutoCommit()) {
-                throw new IllegalStateException(
-                    "Student saving requires a caller-managed transaction."
-                );
-            }
-
-            Optional<Integer> memberId =
-                findMemberId(student.getId());
-
-            if (memberId.isPresent()) {
-                throw new UnsupportedOperationException(
-                    "Updating an existing student is not implemented yet."
-                );
-            }
-
-            int newMemberId = insertMember(student);
-            insertStudent(student, newMemberId);
-
-        } catch (SQLException exception) {
-            throw new IllegalStateException(
-                "Could not save student with ID " + student.getId(),
-                exception
-            );
-        }
-    }
+    
 
     private Optional<Integer> findMemberId(int studentId)
             throws SQLException {
@@ -175,6 +142,66 @@ public class JdbcStudentRepository implements StudentRepository {
                     "Expected one student to be inserted."
                 );
             }
+        }
+    }
+    private void updateStudent(Student student, int memberId)
+        throws SQLException {
+        String memberSql = """
+            UPDATE members
+            SET full_name = ?
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement =
+                connection.prepareStatement(memberSql)) {
+
+            statement.setString(1, student.getName());
+            statement.setInt(2, memberId);
+            statement.executeUpdate();
+        }
+        String studentSql = """
+            UPDATE students
+            SET active = ?, university_email = ?
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement =
+                connection.prepareStatement(studentSql)) {
+
+            statement.setBoolean(1, student.isActive());
+            statement.setString(2, student.getUniversityEmail());
+            statement.setInt(3, student.getId());
+            statement.executeUpdate();
+        }
+    }
+    @Override
+    public void save(Student student) {
+        if (student == null) {
+            throw new IllegalArgumentException(
+                "Student must not be null."
+            );
+        }
+
+        try {
+            if (connection.getAutoCommit()) {
+                throw new IllegalStateException(
+                    "Student saving requires a caller-managed transaction."
+                );
+            }
+
+            Optional<Integer> memberId = findMemberId(student.getId());
+
+            if(memberId.isPresent()){
+                updateStudent(student, memberId.get());
+            } 
+            else{
+                int newMemberId = insertMember(student);
+                insertStudent(student, newMemberId);
+            }
+
+        } catch (SQLException exception) {
+            throw new IllegalStateException(
+                "Could not save student with ID " + student.getId(),
+                exception
+            );
         }
     }
 }
