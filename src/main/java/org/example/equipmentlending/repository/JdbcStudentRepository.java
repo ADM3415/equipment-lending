@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Optional;
 
 import org.example.equipmentlending.model.Student;
 
 public class JdbcStudentRepository implements StudentRepository {
     private final Connection connection;
+    private final JdbcMemberWriter memberWriter;
 
     public JdbcStudentRepository(Connection connection) {
         if (connection == null) {
@@ -20,6 +20,7 @@ public class JdbcStudentRepository implements StudentRepository {
         }
 
         this.connection = connection;
+        this.memberWriter = new JdbcMemberWriter(connection);
     }
 
     @Override
@@ -90,36 +91,6 @@ public class JdbcStudentRepository implements StudentRepository {
         }
     }
 
-    private int insertMember(Student student) throws SQLException {
-        String sql = """
-            INSERT INTO members (full_name, member_type)
-            VALUES (?, ?)
-            """;
-
-        try (PreparedStatement statement = connection.prepareStatement(
-                sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            statement.setString(1, student.getName());
-            statement.setString(2, student.getType().name());
-
-            if (statement.executeUpdate() != 1) {
-                throw new SQLException(
-                    "Expected one member to be inserted."
-                );
-            }
-
-            try (ResultSet keys = statement.getGeneratedKeys()) {
-                if (!keys.next()) {
-                    throw new SQLException(
-                        "No member ID was generated."
-                    );
-                }
-
-                return keys.getInt(1);
-            }
-        }
-    }
-
     private void insertStudent(Student student, int memberId)
             throws SQLException {
 
@@ -144,20 +115,8 @@ public class JdbcStudentRepository implements StudentRepository {
             }
         }
     }
-    private void updateStudent(Student student, int memberId)
-        throws SQLException {
-        String memberSql = """
-            UPDATE members
-            SET full_name = ?
-            WHERE id = ?
-            """;
-        try (PreparedStatement statement =
-                connection.prepareStatement(memberSql)) {
-
-            statement.setString(1, student.getName());
-            statement.setInt(2, memberId);
-            statement.executeUpdate();
-        }
+    private void updateStudent(Student student, int memberId) throws SQLException {
+        memberWriter.updateMemberName(memberId, student.getName());
         String studentSql = """
             UPDATE students
             SET active = ?, university_email = ?
@@ -193,7 +152,7 @@ public class JdbcStudentRepository implements StudentRepository {
                 updateStudent(student, memberId.get());
             } 
             else{
-                int newMemberId = insertMember(student);
+                int newMemberId = memberWriter.insertMember(student);
                 insertStudent(student, newMemberId);
             }
 
