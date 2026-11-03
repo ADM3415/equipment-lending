@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.sql.Statement;
 
 import org.example.equipmentlending.model.Teacher;
 
 
 public class JdbcTeacherRepository implements TeacherRepository{
     private final Connection connection;
+    private final JdbcMemberWriter memberWriter;
 
     public JdbcTeacherRepository(Connection connection) {
         if (connection == null) {
@@ -21,6 +21,7 @@ public class JdbcTeacherRepository implements TeacherRepository{
         }
 
         this.connection = connection;
+        this.memberWriter = new JdbcMemberWriter(connection);
     }
 
     @Override
@@ -88,37 +89,6 @@ public class JdbcTeacherRepository implements TeacherRepository{
             }
         }
     }
-
-    private int insertMember(Teacher teacher) throws SQLException {
-        String sql = """
-            INSERT INTO members (full_name, member_type)
-            VALUES (?, ?)
-            """;
-
-        try (PreparedStatement statement = connection.prepareStatement(
-                sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            statement.setString(1, teacher.getName());
-            statement.setString(2, teacher.getType().name());
-
-            if (statement.executeUpdate() != 1) {
-                throw new SQLException(
-                    "Expected one member to be inserted."
-                );
-            }
-
-            try (ResultSet keys = statement.getGeneratedKeys()) {
-                if (!keys.next()) {
-                    throw new SQLException(
-                        "No member ID was generated."
-                    );
-                }
-
-                return keys.getInt(1);
-            }
-        }
-    }
-
     private void insertTeacher(Teacher teacher, int memberId) throws SQLException {
 
         String sql = """
@@ -138,20 +108,6 @@ public class JdbcTeacherRepository implements TeacherRepository{
             }
         }
     }
-    private void updateMemberName(Teacher teacher, int memberId) throws SQLException {
-        String memberSql = """
-            UPDATE members
-            SET full_name = ?
-            WHERE id = ?
-            """;
-        try (PreparedStatement statement =
-                connection.prepareStatement(memberSql)) {
-
-            statement.setString(1, teacher.getName());
-            statement.setInt(2, memberId);
-            statement.executeUpdate();
-        }
-    }
     @Override
     public void save(Teacher teacher) {
         if(teacher == null){
@@ -167,14 +123,14 @@ public class JdbcTeacherRepository implements TeacherRepository{
             Optional<Integer> memberId = findMemberId(teacher.getId());
 
             if(memberId.isPresent()){
-                updateMemberName(teacher, memberId.get());
-            } 
+                memberWriter.updateMemberName(memberId.get(), teacher.getName());
+            }
             else{
-                int newMemberId = insertMember(teacher);
+                int newMemberId = memberWriter.insertMember(teacher);
                 insertTeacher(teacher, newMemberId);
             }
-
-        } catch (SQLException exception) {
+        }
+        catch (SQLException exception) {
             throw new IllegalStateException(
                 "Could not save teacher with ID " + teacher.getId(),
                 exception

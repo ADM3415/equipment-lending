@@ -5,13 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
-import java.sql.Statement;
 
 import org.example.equipmentlending.model.Staff;
 
 
 public class JdbcStaffRepository implements StaffRepository{
     private final Connection connection;
+    private final JdbcMemberWriter memberWriter;
 
     public JdbcStaffRepository(Connection connection) {
         if (connection == null) {
@@ -21,6 +21,7 @@ public class JdbcStaffRepository implements StaffRepository{
         }
 
         this.connection = connection;
+        this.memberWriter = new JdbcMemberWriter(connection);
     }
 
     @Override
@@ -89,35 +90,6 @@ public class JdbcStaffRepository implements StaffRepository{
         }
     }
 
-    private int insertMember(Staff staff) throws SQLException {
-        String sql = """
-            INSERT INTO members (full_name, member_type)
-            VALUES (?, ?)
-            """;
-
-        try (PreparedStatement statement = connection.prepareStatement(
-                sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            statement.setString(1, staff.getName());
-            statement.setString(2, staff.getType().name());
-
-            if (statement.executeUpdate() != 1) {
-                throw new SQLException(
-                    "Expected one member to be inserted."
-                );
-            }
-
-            try (ResultSet keys = statement.getGeneratedKeys()) {
-                if (!keys.next()) {
-                    throw new SQLException(
-                        "No member ID was generated."
-                    );
-                }
-
-                return keys.getInt(1);
-            }
-        }
-    }
 
     private void insertStaff(Staff staff, int memberId) throws SQLException {
 
@@ -138,20 +110,6 @@ public class JdbcStaffRepository implements StaffRepository{
             }
         }
     }
-    private void updateMemberName(Staff staff, int memberId) throws SQLException {
-        String memberSql = """
-            UPDATE members
-            SET full_name = ?
-            WHERE id = ?
-            """;
-        try (PreparedStatement statement =
-                connection.prepareStatement(memberSql)) {
-
-            statement.setString(1, staff.getName());
-            statement.setInt(2, memberId);
-            statement.executeUpdate();
-        }
-    }
     @Override
     public void save(Staff staff) {
         if(staff == null){
@@ -167,10 +125,10 @@ public class JdbcStaffRepository implements StaffRepository{
             Optional<Integer> memberId = findMemberId(staff.getId());
 
             if(memberId.isPresent()){
-                updateMemberName(staff, memberId.get());
+                memberWriter.updateMemberName(memberId.get(), staff.getName());
             } 
             else{
-                int newMemberId = insertMember(staff);
+                int newMemberId = memberWriter.insertMember(staff);
                 insertStaff(staff, newMemberId);
             }
 
