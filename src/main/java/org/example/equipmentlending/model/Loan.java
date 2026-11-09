@@ -18,8 +18,7 @@ public class Loan {
     private ItemCondition returnCondition;
     private String returnDescription;
     
-    public Loan(int id, Student student, Item item,
-            Staff registeredBy, LocalDate borrowDate){
+    public Loan(int id, Student student, Item item, Staff registeredBy, LocalDate borrowDate){
                 if (id <= 0) {
                     throw new IllegalArgumentException(
                         "Loan ID must be positive."
@@ -158,5 +157,89 @@ public class Loan {
                 this.returnProcessedBy = processedBy;
                 this.returnDescription = description;
                 this.status = LoanStatus.CLOSED_LOST;
+            }
+            public static Loan restore(int id,Student student, Item item, Staff registeredBy, LocalDate borrowDate,
+            LocalDate dueDate, LoanStatus status, Member returnedBy, Staff returnProcessedBy, LocalDate returnDate,
+            LocalDate lossReportedDate, ItemCondition returnCondition, String returnDescription) {
+                Loan loan = new Loan(id, student, item, registeredBy, borrowDate);
+                if (dueDate == null || dueDate.isBefore(borrowDate)) {
+                    throw new IllegalArgumentException(
+                        "Due date must be on or after the borrow date."
+                    );
+                }
+                if (status == null) {
+                    throw new IllegalArgumentException("Loan status must not be null.");
+                }
+
+                switch (status) {
+                    case ACTIVE -> {
+                        if (returnedBy != null || returnProcessedBy != null
+                                || returnDate != null || lossReportedDate != null
+                                || returnCondition != null || returnDescription != null) {
+                            throw new IllegalArgumentException(
+                                "An active loan cannot have return or loss details."
+                            );
+                        }
+                    }
+
+                    case RETURNED -> {
+                        if (returnedBy == null || returnProcessedBy == null
+                                || returnDate == null || returnCondition == null) {
+                            throw new IllegalArgumentException(
+                                "A returned loan must record who returned it, who processed "
+                                + "the return, the return date, and the item condition."
+                            );
+                        }
+                        if (lossReportedDate != null) {
+                            throw new IllegalArgumentException(
+                                "A returned loan cannot have a loss report date."
+                            );
+                        }
+                        if (returnDate.isBefore(borrowDate)) {
+                            throw new IllegalArgumentException(
+                                "Return date cannot be before the borrow date."
+                            );
+                        }
+                        if (returnedBy.getType() == MemberType.STUDENT
+                                && returnedBy.getId() != student.getId()) {
+                            throw new IllegalArgumentException(
+                                "Only the borrowing student may return this loan as a student."
+                            );
+                        }
+                        if (returnCondition != ItemCondition.GOOD
+                                && (returnDescription == null || returnDescription.isBlank())) {
+                            throw new IllegalArgumentException("Please describe the damage.");
+                        }
+                    }
+
+                    case CLOSED_LOST -> {
+                        if (returnProcessedBy == null || lossReportedDate == null) {
+                            throw new IllegalArgumentException(
+                                "A lost loan must record who processed the loss and when."
+                            );
+                        }
+                        if (returnedBy != null || returnDate != null || returnCondition != null) {
+                            throw new IllegalArgumentException(
+                                "A lost item cannot have a returner, return date, or return condition."
+                            );
+                        }
+                        if (lossReportedDate.isBefore(borrowDate)) {
+                            throw new IllegalArgumentException(
+                                "Loss report date cannot be before the borrow date."
+                            );
+                        }
+                    }
+                }
+
+                loan.dueDate = dueDate;
+                loan.status = status;
+                loan.returnedBy = returnedBy;
+                loan.returnProcessedBy = returnProcessedBy;
+                loan.returnDate = returnDate;
+                loan.lossReportedDate = lossReportedDate;
+                loan.returnCondition = returnCondition;
+                loan.returnDescription = returnDescription;
+
+                return loan;
             }
 }
