@@ -1,8 +1,6 @@
 package org.example.equipmentlending;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,22 +9,25 @@ import org.example.equipmentlending.model.*;
 import org.example.equipmentlending.repository.*;
 
 public class JdbcLoanRepositoryTest {
-
-    public static void main(String[] args) throws Exception {
-        ConnectionFactory factory = new ConnectionFactory();
-
-        try (Connection connection = factory.openConnection()) {
-            connection.setAutoCommit(false);
-
-            try {
-                runTest(connection);
-            } finally {
-                connection.rollback();
-            }
-
-            System.out.println("Test transaction rolled back.");
+        public static void main(String[] args) throws Exception {
+                ConnectionFactory factory = new ConnectionFactory();
+                try (Connection connection = factory.openConnection()) {
+                        connection.setAutoCommit(false);
+                        try {
+                        runTest(connection);
+                }
+                finally {
+                        connection.rollback();
+                }
+                LoanRepository loanRepository =
+                new JdbcLoanRepository(connection);
+                check(
+                loanRepository.findByStudentId(2_000_000_010).isEmpty(),
+                "Test loans still exist after rollback."
+                );
+                System.out.println("Test transaction rolled back.");
+                }
         }
-    }
 
     private static void runTest(Connection connection) throws Exception {
         int studentId = 2_000_000_010;
@@ -35,13 +36,11 @@ public class JdbcLoanRepositoryTest {
         int processingStaffId = 2_000_000_013;
         int teacherId = 2_000_000_014;
         int loanId = 2_000_000_015;
-
         JdbcStudentRepository students = new JdbcStudentRepository(connection);
         JdbcItemRepository items = new JdbcItemRepository(connection);
         JdbcStaffRepository staff = new JdbcStaffRepository(connection);
         JdbcTeacherRepository teachers = new JdbcTeacherRepository(connection);
         JdbcLoanRepository loans = new JdbcLoanRepository(connection);
-
         // Avoid updating any existing records.
         check(students.findById(studentId).isEmpty(), "Student test ID is in use.");
         check(items.findById(itemId).isEmpty(), "Item test ID is in use.");
@@ -156,6 +155,57 @@ public class JdbcLoanRepositoryTest {
 
         System.out.println("PASS: restored loan fields and resolved the teacher correctly.");
         System.out.println("PASS: preserved the item's current status.");
+        int lostLoanId = 2_000_000_016;
+LocalDate lossDate = borrowed.plusDays(3);
+
+Loan lostLoan = new Loan(
+    lostLoanId, student, item, registeredBy, borrowed
+);
+
+// Save it as ACTIVE first, then update it to CLOSED_LOST.
+loans.save(lostLoan);
+
+lostLoan.markAsLost(
+    processedBy,
+    "Student reported the laptop missing.",
+    lossDate
+);
+loans.save(lostLoan);
+
+List<Loan> updatedHistory = loans.findByStudentId(studentId);
+
+check(updatedHistory.size() == 2,
+    "Expected two loans after saving the lost loan.");
+
+Loan loadedLost = updatedHistory.stream()
+    .filter(savedLoan -> savedLoan.getId() == lostLoanId)
+    .findFirst()
+    .orElseThrow(() -> new AssertionError("Lost loan was not found."));
+
+check(loadedLost.getStatus() == LoanStatus.CLOSED_LOST,
+    "Wrong lost-loan status.");
+
+check(lossDate.equals(loadedLost.getLossReportedDate()),
+    "Wrong loss report date.");
+
+check(loadedLost.getReturnProcessedBy() != null
+        && loadedLost.getReturnProcessedBy().getId() == processingStaffId,
+    "Wrong staff member processing the loss.");
+
+check("Student reported the laptop missing."
+        .equals(loadedLost.getReturnDescription()),
+    "Wrong loss description.");
+
+check(loadedLost.getReturnedBy() == null,
+    "Lost loan must not have a returner.");
+
+check(loadedLost.getReturnDate() == null,
+    "Lost loan must not have a return date.");
+
+check(loadedLost.getReturnCondition() == null,
+    "Lost loan must not have a return condition.");
+
+System.out.println("PASS: saved and loaded a CLOSED_LOST loan.");
     }
 
     private static void check(boolean condition, String message) {
