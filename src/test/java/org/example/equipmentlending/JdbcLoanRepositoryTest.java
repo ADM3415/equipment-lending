@@ -82,8 +82,23 @@ public class JdbcLoanRepositoryTest {
         Loan loan = new Loan(
                 loanId, student, item, registeredBy, borrowed
         );
+        check(
+        loans.findById(loanId).isEmpty(),
+        "Test loan ID is already in use."
+        );
         loans.save(loan);
+        Loan foundById = loans.findById(loanId)
+        .orElseThrow(() -> new AssertionError(
+                "Saved loan was not found by ID."
+        ));
 
+        check(foundById.getId() == loanId, "Wrong loan ID.");
+        check(
+        foundById.getStatus() == LoanStatus.ACTIVE,
+        "Newly saved loan should be ACTIVE."
+        );
+
+System.out.println("PASS: findById loads the saved loan.");
         List<Loan> initialHistory = loans.findByStudentId(studentId);
         check(initialHistory.size() == 1, "Expected one newly saved loan.");
 

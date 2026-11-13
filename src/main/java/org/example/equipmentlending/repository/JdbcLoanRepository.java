@@ -8,6 +8,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.example.equipmentlending.model.Loan;
 import org.example.equipmentlending.model.LoanStatus;
@@ -48,6 +49,36 @@ public class JdbcLoanRepository implements LoanRepository{
         this.itemRepository = new JdbcItemRepository(connection);
         this.staffRepository = new JdbcStaffRepository(connection);
         this.teacherRepository = new JdbcTeacherRepository(connection);
+    }
+    @Override 
+    public Optional<Loan> findById(int loanId){
+        if (loanId <=0){
+            throw new IllegalArgumentException("Loan id must be strictly positive.");
+        }
+        String sql = """
+            SELECT id, student_id, item_id, registered_by_id,
+                borrow_date, due_date, status,
+                returned_by_id, return_processed_by_id,
+                return_date, loss_reported_date,
+                return_condition, return_description
+            FROM loans
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement =
+                connection.prepareStatement(sql)){
+
+            statement.setInt(1, loanId);
+            try (ResultSet result = statement.executeQuery()){
+                if(!result.next()){
+                    return Optional.empty();
+                }
+                Loan loan = readLoan(result);
+                return Optional.of(loan);
+            }
+        }
+        catch (SQLException exception){
+            throw new IllegalStateException("Could not find loan with ID " + loanId, exception);
+        }
     }
     @Override
     public List<Loan> findByStudentId(int studentId){
