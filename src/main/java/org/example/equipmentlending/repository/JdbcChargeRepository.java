@@ -177,7 +177,38 @@ public class JdbcChargeRepository implements ChargeRepository{
             throw new IllegalStateException("Could not insert payment for charge " + charge.getId(), exception);
         }
     }
-    
+    private void verifyStoredPayment(Payment payment, StudentCharge charge){
+        if(payment == null){
+            throw new IllegalArgumentException("Payment must not be null.");
+        }
+        if(charge == null){
+            throw new IllegalArgumentException("Charge must not be null.");
+        }
+        String sql = """
+            SELECT charge_id
+            FROM payments
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            if(payment.getId() == null){
+                throw new IllegalStateException("Payment id can not be null.");
+            }
+            statement.setInt(1, payment.getId());
+            try (ResultSet result = statement.executeQuery()){
+                if(!result.next()){
+                    throw new IllegalStateException("The payment wasn't found.");
+                }
+                
+                int storedChargeId = result.getInt("charge_id");
+                if(charge.getId() != storedChargeId ){
+                    throw new IllegalStateException("Charge id and stored id dont match.");
+                }
+            }
+        }
+        catch (SQLException exception){
+            throw new IllegalStateException("Could not find Charge id for payment with ID " + payment.getId(), exception);
+        }
+    }
     @Override 
     public void save(StudentCharge charge){
         if(charge == null){
@@ -211,6 +242,14 @@ public class JdbcChargeRepository implements ChargeRepository{
             statement.setString(10, charge.getDescription());
             statement.setBoolean(11, charge.isPaid());
             statement.executeUpdate();
+            for(Payment payment : charge.getPayments()){
+                if (payment.getId() == null) {
+                    insertPayment(payment, charge);
+                }
+                else{
+                    verifyStoredPayment(payment, charge);
+                }
+            }
         }
         catch (SQLException exception){
             throw new IllegalStateException("Could not save charge with ID " + charge.getId(),exception);
