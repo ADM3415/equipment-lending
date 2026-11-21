@@ -33,10 +33,10 @@ public class InvoiceService {
             try {
                 repository.save(invoice);
             } catch (RuntimeException saveFailure) {
-                sendFailure.addSuppressed(saveFailure);
+                saveFailure.addSuppressed(sendFailure);
+                throw saveFailure;
             }
-
-            throw sendFailure;
+            throw new InvoiceSendException("Failure to send invoice.", sendFailure);
         }
         repository.save(invoice);
     }

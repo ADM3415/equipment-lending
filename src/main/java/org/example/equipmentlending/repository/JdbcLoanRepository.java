@@ -50,6 +50,87 @@ public class JdbcLoanRepository implements LoanRepository{
         this.staffRepository = new JdbcStaffRepository(connection);
         this.teacherRepository = new JdbcTeacherRepository(connection);
     }
+    @Override
+    public void insert(Loan loan){
+        if(loan == null){
+            throw new IllegalArgumentException("Loan must not be null.");
+        }
+        String sql = """
+            INSERT INTO loans (
+                id, student_id, item_id, registered_by_id,
+                borrow_date, due_date, status,
+                returned_by_id, return_processed_by_id,
+                return_date, loss_reported_date,
+                return_condition, return_description
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """;
+        try{
+            if(connection.getAutoCommit()){
+                throw new IllegalStateException(
+                    "Loan insertion requires a caller-managed transaction."
+                );
+            }
+            Integer returnedByMemberId = loan.getReturnedBy() == null ? null : findMemberId(loan.getReturnedBy());
+            try (PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setInt(1, loan.getId());
+                statement.setInt(2, loan.getStudent().getId());
+                statement.setInt(3, loan.getItem().getId());
+                statement.setInt(4, loan.getRegisteredBy().getId());
+                statement.setObject(5, loan.getBorrowDate());
+                statement.setObject(6, loan.getDueDate());
+                statement.setString(7, loan.getStatus().name());
+                if(returnedByMemberId == null){
+                    statement.setNull(8, Types.INTEGER);
+                } 
+                else{
+                    statement.setInt(8, returnedByMemberId);
+                }
+
+                if(loan.getReturnProcessedBy() == null){
+                    statement.setNull(9, Types.INTEGER);
+                }
+                else{
+                    statement.setInt(9, loan.getReturnProcessedBy().getId());
+                }
+
+                if(loan.getReturnDate() == null){
+                    statement.setNull(10, Types.DATE);
+                }
+                else{
+                    statement.setObject(10, loan.getReturnDate());
+                }
+
+                if(loan.getLossReportedDate() == null){
+                    statement.setNull(11, Types.DATE);
+                }
+                else{
+                    statement.setObject(11, loan.getLossReportedDate());
+                }
+
+                if(loan.getReturnCondition() == null){
+                    statement.setNull(12, Types.VARCHAR);
+                }
+                else{
+                    statement.setString(12, loan.getReturnCondition().name());
+                }
+
+                if(loan.getReturnDescription() == null){
+                    statement.setNull(13, Types.VARCHAR);
+                }
+                else{
+                    statement.setString(13, loan.getReturnDescription());
+                }
+
+                if(statement.executeUpdate() != 1){
+                    throw new SQLException("Expected one loan to be inserted.");
+                }
+            }
+        } 
+        catch(SQLException exception){
+            throw new IllegalStateException("Could not insert loan with ID " + loan.getId(), exception);
+        }
+    }
     @Override 
     public Optional<Loan> findById(int loanId){
         if (loanId <=0){
@@ -102,7 +183,6 @@ public class JdbcLoanRepository implements LoanRepository{
                 "Could not load loans for student " + studentId, exception
             );
         }
-
         return loans;
     }
     private Loan readLoan(ResultSet result) throws SQLException {

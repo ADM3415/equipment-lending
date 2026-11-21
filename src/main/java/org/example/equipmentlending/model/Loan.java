@@ -109,17 +109,23 @@ public class Loan {
                 return onDate.isAfter(this.dueDate);
             }
             public void markAsReturned( Member returnedBy,Staff processedBy,LocalDate returnDate,ItemCondition condition,String description){
+                if(returnDate == null){
+                    throw new IllegalArgumentException("Loan must have a return date.");
+                }
+                if (returnDate.isBefore(this.borrowDate)) {
+                    throw new IllegalArgumentException("Return date cannot be before borrowing date.");
+                }
                 if(this.status != LoanStatus.ACTIVE){
                     throw new IllegalStateException("Loan is not active so it can not be returned.");
                 }
                 if(returnedBy == null){
                     throw new IllegalArgumentException("Loan must be returned by someone.");
                 }
+                if(returnedBy.getType() == MemberType.STUDENT && returnedBy.getId() != this.student.getId()){
+                    throw new IllegalArgumentException("A student can only return their own loan.");
+                }
                 if(processedBy == null){
                     throw new IllegalArgumentException("Loan must be proccesed by someone.");
-                }
-                if(returnDate == null){
-                    throw new IllegalArgumentException("Loan must have a return date.");
                 }
                 if(condition == null){
                     throw new IllegalArgumentException("Loan must have a return condition.");

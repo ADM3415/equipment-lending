@@ -35,6 +35,7 @@ public class LoanRegistrationService {
         if(item == null){
             throw new IllegalArgumentException("Item must not be null.");
         }
+        
         Item storedItem = itemRepository.findById(item.getId()).orElseThrow(()-> new IllegalArgumentException("Item not found: "+item.getId()));
         Loan createdLoan = new Loan(id, student, storedItem, registeredBy, borrowDate);
         if(!storedItem.isAvailable()){
@@ -66,8 +67,11 @@ public class LoanRegistrationService {
                 );
             }
         }
+        if(loanRepository.findById(id).isPresent()){
+            throw new IllegalArgumentException("Loan id already exists : "+id);
+        }
         storedItem.markAsLoaned();
-        loanRepository.save(createdLoan);
+        loanRepository.insert(createdLoan);
         itemRepository.save(storedItem);
         return createdLoan;
     }

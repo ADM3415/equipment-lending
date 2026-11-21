@@ -15,6 +15,7 @@ import org.example.equipmentlending.repository.ChargeRepository;
 import org.example.equipmentlending.repository.CsvInvoiceRepository;
 import org.example.equipmentlending.repository.InvoiceRepository;
 import org.example.equipmentlending.service.InvoiceService;
+import org.example.equipmentlending.service.InvoiceSendException;
 
 public class EmailTest {
 
@@ -69,8 +70,7 @@ public class EmailTest {
         };
 
         // A separate temporary file for each test run.
-        Path testFile = Files.createTempDirectory("invoice-test-")
-                             .resolve("invoices.csv");
+        Path testFile = Files.createTempDirectory("invoice-test-").resolve("invoices.csv");
 
         InvoiceRepository repository =
             new CsvInvoiceRepository(testFile, chargeRepository);
@@ -199,59 +199,99 @@ public class EmailTest {
 
         System.out.println("PASS: CSV save, update, and load.");
         System.out.println("All tests passed.");
-        // 5. Preserve both errors when sending and saving fail.
-RuntimeException saveFailure =
-    new IllegalStateException("Simulated CSV save failure.");
+        // 5. Both sending and saving fail.
+        RuntimeException saveFailure = new IllegalStateException("Simulated repository save failure.");
+        InvoiceRepository failingRepository = new InvoiceRepository(){
+            @Override
+            public void save(Invoice invoice) {
+                throw saveFailure;
+            }
+            @Override
+            public Optional<Invoice> findById(int id) {
+                throw new UnsupportedOperationException("Not used in this test.");
+            }
+        };
 
-InvoiceRepository failingRepository = new InvoiceRepository() {
-    @Override
-    public void save(Invoice invoice) {
-        throw saveFailure;
-    }
+        RuntimeException sendFailure =
+            new IllegalStateException("Simulated email send failure.");
 
-    @Override
-    public Optional<Invoice> findById(int id) {
-        throw new UnsupportedOperationException("Not used in this test.");
-    }
-};
+        InvoiceSender doubleFailureSender = invoice -> {
+            throw sendFailure;
+        };
 
-RuntimeException sendFailure =
-    new IllegalStateException("Simulated email send failure.");
+        InvoiceService doubleFailureService =
+            new InvoiceService(doubleFailureSender, failingRepository);
 
-InvoiceSender doubleFailureSender = invoice -> {
-    throw sendFailure;
-};
+        Invoice doubleFailureInvoice =
+            new Invoice(4, charge, LocalDate.now());
 
-InvoiceService doubleFailureService =
-    new InvoiceService(doubleFailureSender, failingRepository);
+        try {
+            doubleFailureService.sendInvoice(doubleFailureInvoice);
+            throw new AssertionError("Expected saving to fail.");
+        } catch (RuntimeException actual) {
+            check(actual == saveFailure,
+                "The saving failure must be the exception thrown.");
 
-Invoice doubleFailureInvoice =
-    new Invoice(4, charge, LocalDate.now());
+            Throwable[] suppressed = actual.getSuppressed();
 
-expectFailure(
-    doubleFailureService,
-    doubleFailureInvoice,
-    sendFailure
-);
+            check(suppressed.length == 1 && suppressed[0] == sendFailure,
+                "The sending failure must be suppressed on the saving failure.");
 
-Throwable[] suppressed = sendFailure.getSuppressed();
+            check(sendFailure.getSuppressed().length == 0,
+                "The exceptions must not reference each other circularly.");
+        }
 
-check(
-    suppressed.length == 1 && suppressed[0] == saveFailure,
-    "Saving failure must be attached to the original sending failure."
-);
+        check(!doubleFailureInvoice.isSent(),
+            "Invoice must remain unsent when sending fails.");
 
-check(
-    !doubleFailureInvoice.isSent(),
-    "Invoice must remain unsent when sending fails."
-);
+        check(doubleFailureInvoice.getLastSendAttemptAt() != null,
+            "Attempt time must still be recorded in memory.");
 
-check(
-    doubleFailureInvoice.getLastSendAttemptAt() != null,
-    "Attempt time must still be recorded in memory."
-);
+        System.out.println("PASS: saving failure preserves the sending failure.");
 
-System.out.println("PASS: both sending and saving failures are preserved.");
+
+        // 6. Sending succeeds, but saving fails.
+        // Use a fresh exception so suppressed errors from test 5 aren't reused.
+        RuntimeException saveOnlyFailure =
+            new IllegalStateException("Simulated save failure after sending.");
+
+        InvoiceRepository saveOnlyFailingRepository = new InvoiceRepository() {
+            @Override
+            public void save(Invoice invoice) {
+                throw saveOnlyFailure;
+            }
+
+            @Override
+            public Optional<Invoice> findById(int id) {
+                throw new UnsupportedOperationException("Not used in this test.");
+            }
+        };
+
+        InvoiceService saveOnlyFailingService =
+            new InvoiceService(successfulSender, saveOnlyFailingRepository);
+
+        Invoice sentButNotSaved =
+            new Invoice(5, charge, LocalDate.now());
+
+        try {
+            saveOnlyFailingService.sendInvoice(sentButNotSaved);
+            throw new AssertionError("Expected saving to fail after sending.");
+        } catch (RuntimeException actual) {
+            check(actual == saveOnlyFailure,
+                "The original saving failure must propagate.");
+
+            check(actual.getSuppressed().length == 0,
+                "There should be no sending failure attached.");
+        }
+
+        check(sentButNotSaved.isSent(),
+            "Successful sending must be reflected in memory.");
+
+        check(sentButNotSaved.getLastSendAttemptAt() != null,
+            "Attempt time must be recorded in memory.");
+
+        System.out.println("PASS: saving failure after successful sending propagates.");
+        System.out.println("All tests passed.");
         System.out.println("Test file: " + testFile);
     }
 
@@ -261,24 +301,21 @@ System.out.println("PASS: both sending and saving failures are preserved.");
         }
     }
 
-    private static void expectFailure(
-        InvoiceService service,
-        Invoice invoice,
-        RuntimeException expected
-    ) {
+    private static void expectFailure(InvoiceService service, Invoice invoice, RuntimeException expectedCause) {
         try {
             service.sendInvoice(invoice);
-        } catch (RuntimeException actual) {
-            if (actual != expected) {
-                throw new AssertionError(
-                    "Unexpected failure instead of the simulated SMTP failure.",
-                    actual
-                );
-            }
+        } 
+        catch (InvoiceSendException actual) {
+            check(actual.getCause() == expectedCause,
+                "InvoiceSendException must preserve the sending failure.");
             return;
+        } catch (RuntimeException actual) {
+            throw new AssertionError(
+                "Expected InvoiceSendException after saving the failed attempt.",
+                actual
+            );
         }
 
         throw new AssertionError("Expected sending to fail.");
-        
     }
 }
