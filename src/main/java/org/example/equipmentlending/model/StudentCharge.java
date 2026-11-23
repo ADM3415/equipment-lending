@@ -6,16 +6,17 @@ import java.util.List;
 
 public class StudentCharge {
     private Loan loan;
-    private final int id;
+    private Integer id;
     private ChargeType type;
     private BigDecimal amount;
     private String description;
     private boolean isPaid;
     private final List<Payment> payments = new ArrayList<>();
     public StudentCharge(int id, Loan loan, ChargeType type, BigDecimal amount, String description){
-        if(id <= 0){
-            throw new IllegalArgumentException("Id must be positive.");
-        }
+        this(loan, type, amount, description);
+        assignId(id);
+    }
+    public StudentCharge(Loan loan, ChargeType type, BigDecimal amount, String description){
         if(loan == null){
             throw new IllegalArgumentException("Loan must exist.");
         }
@@ -28,14 +29,23 @@ public class StudentCharge {
         if (amount == null || amount.signum() <= 0) {
             throw new IllegalArgumentException("Charge amount must be positive.");
         }
-        this.id = id;
+        this.id = null;
         this.loan = loan; 
         this.type = type;
         this.amount = amount;
         this.description = description;
         this.isPaid = false;
     }
-    public int getId(){
+    public void assignId(Integer id) {
+        if(id == null || id <= 0){
+            throw new IllegalArgumentException("Charge ID must be positive.");
+        }
+        if(this.id != null){
+            throw new IllegalStateException("Charge already has an ID.");
+        }
+        this.id = id;
+    }
+    public Integer getId(){
         return this.id;
     }
     public boolean isPaid(){

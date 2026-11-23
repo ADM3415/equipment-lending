@@ -209,50 +209,115 @@ public class JdbcChargeRepository implements ChargeRepository{
             throw new IllegalStateException("Could not find Charge id for payment with ID " + payment.getId(), exception);
         }
     }
-    @Override 
-    public void save(StudentCharge charge){
-        if(charge == null){
-            throw new IllegalArgumentException("Charge must not be null.");
+    private void updateCharge(StudentCharge charge) throws SQLException {
+        String lookupSql = """
+            SELECT id
+            FROM student_charges
+            WHERE id = ?
+            FOR UPDATE
+            """;
+
+        try (PreparedStatement statement =
+                connection.prepareStatement(lookupSql)) {
+
+            statement.setInt(1, charge.getId());
+
+            try (ResultSet result = statement.executeQuery()) {
+                if (!result.next()) {
+                    throw new IllegalStateException(
+                        "Charge not found: " + charge.getId()
+                    );
+                }
+            }
         }
-        String sql = """
-            INSERT INTO student_charges (
-                id, loan_id, type, amount, description, is_paid
-            )
-            VALUES (?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE
-                loan_id = ?,
+
+        String updateSql = """
+            UPDATE student_charges
+            SET loan_id = ?,
                 type = ?,
                 amount = ?,
                 description = ?,
                 is_paid = ?
+            WHERE id = ?
             """;
-        try(PreparedStatement statement = connection.prepareStatement(sql)){
-            if (connection.getAutoCommit()){
-                throw new IllegalStateException("Charge saving requires a caller-managed transaction.");
-            }
-            statement.setInt(1, charge.getId());
-            statement.setInt(2, charge.getLoan().getId());
-            statement.setString(3, charge.getChargeType().name());
-            statement.setBigDecimal(4, charge.getAmount());
-            statement.setString(5, charge.getDescription());
-            statement.setBoolean(6, charge.isPaid());
-            statement.setInt(7, charge.getLoan().getId());
-            statement.setString(8, charge.getChargeType().name());
-            statement.setBigDecimal(9, charge.getAmount());
-            statement.setString(10, charge.getDescription());
-            statement.setBoolean(11, charge.isPaid());
+
+        try (PreparedStatement statement =
+                connection.prepareStatement(updateSql)) {
+
+            statement.setInt(1, charge.getLoan().getId());
+            statement.setString(2, charge.getChargeType().name());
+            statement.setBigDecimal(3, charge.getAmount());
+            statement.setString(4, charge.getDescription());
+            statement.setBoolean(5, charge.isPaid());
+            statement.setInt(6, charge.getId());
+
             statement.executeUpdate();
-            for(Payment payment : charge.getPayments()){
+        }
+    }
+    private void insertCharge(StudentCharge charge) throws SQLException{
+        if(charge.getId() != null){
+            throw new IllegalStateException("Charge already has an ID.");
+        }
+        String sql = """
+            INSERT INTO student_charges (
+                loan_id, type, amount, description, is_paid
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """;
+
+        try (PreparedStatement statement = connection.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setInt(1, charge.getLoan().getId());
+            statement.setString(2, charge.getChargeType().name());
+            statement.setBigDecimal(3, charge.getAmount());
+            statement.setString(4, charge.getDescription());
+            statement.setBoolean(5, charge.isPaid());
+
+            if (statement.executeUpdate() != 1) {
+                throw new SQLException("Expected one charge to be inserted.");
+            }
+
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (!keys.next()) {
+                    throw new SQLException("No charge ID was generated.");
+                }
+
+                charge.assignId(keys.getInt(1));
+            }
+        }
+    }
+    @Override
+    public void save(StudentCharge charge) {
+        if (charge == null) {
+            throw new IllegalArgumentException("Charge must not be null.");
+        }
+
+        try {
+            if (connection.getAutoCommit()) {
+                throw new IllegalStateException(
+                    "Charge saving requires a caller-managed transaction."
+                );
+            }
+
+            if (charge.getId() == null) {
+                insertCharge(charge);
+            } else {
+                updateCharge(charge);
+            }
+
+            for (Payment payment : charge.getPayments()) {
                 if (payment.getId() == null) {
                     insertPayment(payment, charge);
-                }
-                else{
+                } else {
                     verifyStoredPayment(payment, charge);
                 }
             }
-        }
-        catch (SQLException exception){
-            throw new IllegalStateException("Could not save charge with ID " + charge.getId(),exception);
+        } catch (SQLException exception) {
+            throw new IllegalStateException(
+                "Could not save charge with ID " + charge.getId(),
+                exception
+            );
         }
     }
 }
