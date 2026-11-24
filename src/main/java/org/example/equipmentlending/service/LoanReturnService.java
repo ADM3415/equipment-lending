@@ -50,9 +50,11 @@ public class LoanReturnService {
         long lateDays = Math.max(ChronoUnit.DAYS.between(loan.getDueDate(), returnDate),0);
         if(lateDays > 0){
             BigDecimal amount = BigDecimal.valueOf(lateDays).multiply(new BigDecimal("5.00"));
-            int lateChargeId;
-            StudentCharge studentCharge = new StudentCharge(lateChargeId, loan, ChargeType.LATE_FEE, amount, "Late return: " + lateDays + " day(s) at 5.00 MAD per day.");
+            StudentCharge studentCharge = new StudentCharge(loan, ChargeType.LATE_FEE, amount, "Late return: " + lateDays + " day(s) at 5.00 MAD per day.");
+            chargeRepository.save(studentCharge);
         }
+        loanRepository.save(loan);
+        itemRepository.save(item);
         return loan;
     }
 

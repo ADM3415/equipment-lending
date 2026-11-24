@@ -2,21 +2,19 @@ package org.example.equipmentlending;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.time.LocalDate;
 import java.sql.Savepoint;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import org.example.equipmentlending.database.ConnectionFactory;
 import org.example.equipmentlending.model.*;
 import org.example.equipmentlending.repository.*;
-
 
 public class JdbcChargeRepositoryTest {
     private static final int STUDENT_ID = 2_000_000_020;
     private static final int STAFF_ID = 2_000_000_021;
     private static final int ITEM_ID = 2_000_000_022;
     private static final int LOAN_ID = 2_000_000_023;
-    private static final int CHARGE_ID = 2_000_000_024;
 
     public static void main(String[] args) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -24,15 +22,16 @@ public class JdbcChargeRepositoryTest {
         try (Connection connection = factory.openConnection()) {
             connection.setAutoCommit(false);
 
+            int chargeId;
             try {
-                runTest(connection);
+                chargeId = runTest(connection);
             } finally {
                 connection.rollback();
             }
 
             ChargeRepository charges = new JdbcChargeRepository(connection);
 
-            check(charges.findById(CHARGE_ID).isEmpty(),
+            check(charges.findById(chargeId).isEmpty(),
                 "Test charge still exists after rollback.");
 
             System.out.println("PASS: rollback removed the test charge.");
@@ -41,7 +40,7 @@ public class JdbcChargeRepositoryTest {
         System.out.println("All charge repository tests passed.");
     }
 
-    private static void runTest(Connection connection) throws SQLException {
+    private static int runTest(Connection connection) throws SQLException {
         StudentRepository students = new JdbcStudentRepository(connection);
         StaffRepository staffRepository = new JdbcStaffRepository(connection);
         ItemRepository items = new JdbcItemRepository(connection);
@@ -56,8 +55,6 @@ public class JdbcChargeRepositoryTest {
             "Test item ID is already in use.");
         check(loans.findById(LOAN_ID).isEmpty(),
             "Test loan ID is already in use.");
-        check(charges.findById(CHARGE_ID).isEmpty(),
-            "Test charge ID is already in use.");
 
         Student student = new Student(
             "Charge Test Student",
@@ -79,10 +76,7 @@ public class JdbcChargeRepositoryTest {
 
         LocalDate borrowDate = LocalDate.of(2026, 10, 1);
         LocalDate paymentDate = borrowDate.plusDays(10);
-
-        Loan loan = new Loan(
-            LOAN_ID, student, item, staff, borrowDate
-        );
+        Loan loan = new Loan(LOAN_ID, student, item, staff, borrowDate);
 
         students.save(student);
         staffRepository.save(staff);
@@ -92,18 +86,20 @@ public class JdbcChargeRepositoryTest {
         check(charges.findByStudentId(STUDENT_ID).isEmpty(),
             "New test student should have no charges.");
 
-        // 1. Save a charge without payments.
+        // 1. Insert a new charge and retrieve its generated ID.
         StudentCharge charge = new StudentCharge(
-            CHARGE_ID,
             loan,
             ChargeType.LATE_FEE,
             new BigDecimal("15.00"),
             "Repository test charge."
         );
 
-        charges.save(charge);
+        check(charge.getId() == null,
+            "A new charge should not already have an ID.");
 
-        StudentCharge loaded = loadCharge(charges);
+        charges.save(charge);
+        int chargeId = generatedId(charge);
+        StudentCharge loaded = loadCharge(charges, chargeId);
 
         check(loaded.getLoan().getId() == LOAN_ID, "Wrong loan.");
         check(loaded.getChargeType() == ChargeType.LATE_FEE,
@@ -118,9 +114,9 @@ public class JdbcChargeRepositoryTest {
             "New charge should have zero paid.");
         check(!loaded.isPaid(), "New charge should be unpaid.");
 
-        System.out.println("PASS: saved and loaded an unpaid charge.");
+        System.out.println("PASS: generated charge ID and unpaid charge restored.");
 
-        // 2. Save a partial payment.
+        // 2. Save and restore a partial payment.
         Payment firstPayment = new Payment(
             new BigDecimal("5.00"),
             paymentDate,
@@ -134,7 +130,7 @@ public class JdbcChargeRepositoryTest {
         check(firstPayment.getId() != null && firstPayment.getId() > 0,
             "Payment was not assigned a generated ID.");
 
-        loaded = loadCharge(charges);
+        loaded = loadCharge(charges, chargeId);
 
         check(loaded.getPayments().size() == 1,
             "Expected one partial payment.");
@@ -156,25 +152,27 @@ public class JdbcChargeRepositoryTest {
         check(loaded.getRemainingAmount()
                 .compareTo(new BigDecimal("10.00")) == 0,
             "Wrong remaining amount.");
-        check(!loaded.isPaid(),
-            "A partially paid charge must remain unpaid.");
+        check(!loaded.isPaid(), "Partially paid charge must remain unpaid.");
 
         System.out.println("PASS: partial payment and its ID were restored.");
 
-        // 3. Saving again must not duplicate the payment.
+        // 3. Repeated saves must not duplicate charges or payments.
         charges.save(charge);
         charges.save(loaded);
+        loaded = loadCharge(charges, chargeId);
 
-        loaded = loadCharge(charges);
-
+        check(charge.getId() == chargeId,
+            "Saving again changed the charge ID.");
+        check(charges.findByStudentId(STUDENT_ID).size() == 1,
+            "Saving again duplicated the charge.");
         check(loaded.getPayments().size() == 1,
             "Saving again duplicated a payment.");
         check(loaded.getTotalPaid().compareTo(new BigDecimal("5.00")) == 0,
             "Total paid changed after repeated saving.");
 
-        System.out.println("PASS: repeated saving does not duplicate payments.");
+        System.out.println("PASS: repeated saving duplicates neither charge nor payments.");
 
-        // 4. Pay the remaining amount using the reloaded charge.
+        // 4. Pay the remaining amount.
         Payment finalPayment = new Payment(
             new BigDecimal("10.00"),
             paymentDate.plusDays(1),
@@ -190,158 +188,182 @@ public class JdbcChargeRepositoryTest {
         check(!finalPayment.getId().equals(firstPayment.getId()),
             "Different payments should have different IDs.");
 
-        StudentCharge fullyPaid = loadCharge(charges);
+        StudentCharge fullyPaid = loadCharge(charges, chargeId);
 
-        check(fullyPaid.getPayments().size() == 2,
-            "Expected two payments.");
-        check(fullyPaid.getTotalPaid()
-                .compareTo(new BigDecimal("15.00")) == 0,
+        check(fullyPaid.getPayments().size() == 2, "Expected two payments.");
+        check(fullyPaid.getTotalPaid().compareTo(new BigDecimal("15.00")) == 0,
             "Wrong total paid.");
-        check(fullyPaid.getRemainingAmount()
-                .compareTo(BigDecimal.ZERO) == 0,
+        check(fullyPaid.getRemainingAmount().compareTo(BigDecimal.ZERO) == 0,
             "Fully paid charge should have no remaining amount.");
-        check(fullyPaid.isPaid(),
-            "Charge should be fully paid.");
+        check(fullyPaid.isPaid(), "Charge should be fully paid.");
 
         var studentCharges = charges.findByStudentId(STUDENT_ID);
 
         check(studentCharges.size() == 1,
             "Expected one charge for the test student.");
-        check(studentCharges.get(0).getId() == CHARGE_ID,
+        check(studentCharges.get(0).getId() == chargeId,
             "Wrong charge returned for student.");
         check(studentCharges.get(0).isPaid(),
             "Student lookup did not restore payment status.");
 
         System.out.println("PASS: full payment and student lookup.");
-        int rollbackChargeId = 2_000_000_025;
-        check(charges.findById(rollbackChargeId).isEmpty(),
-            "Rollback test charge ID is already in use.");
 
-        Savepoint beforePayment = connection.setSavepoint();
-
+        // 5. Reject a charge ID whose insert was rolled back.
+        Savepoint beforeCharge = connection.setSavepoint();
         try {
-            StudentCharge rollbackCharge = new StudentCharge(
-                rollbackChargeId,
-                loan,
-                ChargeType.LATE_FEE,
-                new BigDecimal("15.00"),
+            StudentCharge rolledBackCharge = new StudentCharge(
+                loan, ChargeType.DAMAGE, new BigDecimal("20.00"),
+                "Charge rollback test."
+            );
+
+            charges.save(rolledBackCharge);
+            int rolledBackId = generatedId(rolledBackCharge);
+
+            connection.rollback(beforeCharge);
+
+            check(charges.findById(rolledBackId).isEmpty(),
+                "Charge still exists after rollback.");
+            check(rolledBackCharge.getId() == rolledBackId,
+                "Java charge should retain its assigned ID.");
+
+            expectFailure(
+                () -> charges.save(rolledBackCharge),
+                "Charge not found: " + rolledBackId
+            );
+
+            check(charges.findById(rolledBackId).isEmpty(),
+                "Saving a stale charge recreated its row.");
+
+            System.out.println("PASS: charge ID left over after rollback is rejected.");
+        } finally {
+            connection.rollback(beforeCharge);
+            connection.releaseSavepoint(beforeCharge);
+        }
+
+        // 6. Keep the charge, but roll back its new payment.
+        Savepoint beforePaymentScenario = connection.setSavepoint();
+        try {
+            StudentCharge paymentCharge = new StudentCharge(
+                loan, ChargeType.LATE_FEE, new BigDecimal("15.00"),
                 "Payment rollback test."
             );
 
-            Payment rollbackPayment = new Payment(
-                new BigDecimal("5.00"),
-                paymentDate,
-                "TEST-ROLLBACK-PAYMENT",
-                staff
-            );
+            charges.save(paymentCharge);
+            int paymentChargeId = generatedId(paymentCharge);
 
-            rollbackCharge.addPayment(rollbackPayment);
-            charges.save(rollbackCharge);
-
-            Integer assignedId = rollbackPayment.getId();
-
-            check(assignedId != null,
-                "Payment should have received an ID.");
-
-            // Undo the database inserts, keeping the Java objects.
-            connection.rollback(beforePayment);
-
-            check(charges.findById(rollbackChargeId).isEmpty(),
-                "Charge still exists after rollback.");
-
-            check(assignedId.equals(rollbackPayment.getId()),
-                "Java payment should still hold its assigned ID.");
-
-            // Saving again must detect that the payment row is missing.
+            Savepoint beforePayment = connection.setSavepoint();
             try {
-                charges.save(rollbackCharge);
-
-                throw new AssertionError(
-                    "Expected saving to reject the missing payment."
+                Payment rollbackPayment = new Payment(
+                    new BigDecimal("5.00"),
+                    paymentDate,
+                    "TEST-ROLLBACK-PAYMENT",
+                    staff
                 );
-            } catch (IllegalStateException exception) {
-                if (!"The payment wasn't found.".equals(exception.getMessage())) {
-                    throw new AssertionError(
-                        "Unexpected failure instead of missing-payment rejection.",
-                        exception
-                    );
-                }
+
+                paymentCharge.addPayment(rollbackPayment);
+                charges.save(paymentCharge);
+
+                Integer paymentId = rollbackPayment.getId();
+                check(paymentId != null && paymentId > 0,
+                    "Payment should have received an ID.");
+
+                connection.rollback(beforePayment);
+
+                check(loadCharge(charges, paymentChargeId).getPayments().isEmpty(),
+                    "Payment still exists after rollback.");
+                check(paymentId.equals(rollbackPayment.getId()),
+                    "Java payment should retain its assigned ID.");
+
+                expectFailure(
+                    () -> charges.save(paymentCharge),
+                    "The payment wasn't found."
+                );
+
+                System.out.println(
+                    "PASS: payment ID left over after rollback is rejected."
+                );
+            } finally {
+                connection.rollback(beforePayment);
+                connection.releaseSavepoint(beforePayment);
             }
-
-            System.out.println(
-                "PASS: saving rejects a payment ID left over after rollback."
-            );
         } finally {
-            // The failed retry may have reinserted the charge row.
-            connection.rollback(beforePayment);
-            connection.releaseSavepoint(beforePayment);
+            connection.rollback(beforePaymentScenario);
+            connection.releaseSavepoint(beforePaymentScenario);
         }
-        int otherChargeId = 2_000_000_026;
-        check(charges.findById(otherChargeId).isEmpty(),
-            "Second test charge ID is already in use.");
 
+        // 7. Reject a payment belonging to a different charge.
         Savepoint beforeWrongCharge = connection.setSavepoint();
+        StudentCharge otherCharge = new StudentCharge(
+            loan, ChargeType.DAMAGE, new BigDecimal("100.00"),
+            "Test payment assigned to the wrong charge."
+        );
 
         try {
-            StudentCharge originalCharge = loadCharge(charges);
-            Payment existingPayment = originalCharge.getPayments().get(0);
+            // Save first so the ownership check tests an existing charge.
+            charges.save(otherCharge);
+            generatedId(otherCharge);
 
-            StudentCharge otherCharge = new StudentCharge(
-                otherChargeId,
-                loan,
-                ChargeType.DAMAGE,
-                new BigDecimal("100.00"),
-                "Test payment assigned to the wrong charge."
-            );
+            Payment existingPayment =
+                loadCharge(charges, chargeId).getPayments().get(0);
 
-            // This payment already belongs to the original charge.
             otherCharge.addPayment(existingPayment);
 
-            try {
-                charges.save(otherCharge);
-
-                throw new AssertionError(
-                    "Expected saving to reject a payment belonging to another charge."
-                );
-            } catch (IllegalStateException exception) {
-                if (!"Charge id and stored id dont match."
-                        .equals(exception.getMessage())) {
-                    throw new AssertionError(
-                        "Unexpected failure instead of payment ownership rejection.",
-                        exception
-                    );
-                }
-            }
+            expectFailure(
+                () -> charges.save(otherCharge),
+                "Charge id and stored id dont match."
+            );
         } finally {
             connection.rollback(beforeWrongCharge);
             connection.releaseSavepoint(beforeWrongCharge);
         }
 
-        check(charges.findById(otherChargeId).isEmpty(),
+        check(charges.findById(otherCharge.getId()).isEmpty(),
             "Second test charge still exists after rollback.");
 
-        StudentCharge unchangedCharge = loadCharge(charges);
+        StudentCharge unchanged = loadCharge(charges, chargeId);
+        check(unchanged.getPayments().size() == 2,
+            "Original charge's payments changed.");
+        check(unchanged.getTotalPaid().compareTo(new BigDecimal("15.00")) == 0,
+            "Original charge's total paid changed.");
+        check(unchanged.isPaid(), "Original charge should still be fully paid.");
+        check(charges.findByStudentId(STUDENT_ID).size() == 1,
+            "Temporary test charges were not rolled back.");
 
-        check(unchangedCharge.getPayments().size() == 2,
-            "Original charge's payments were changed.");
+        System.out.println("PASS: payment belonging to another charge is rejected.");
 
-        check(unchangedCharge.getTotalPaid()
-                .compareTo(new BigDecimal("15.00")) == 0,
-            "Original charge's total paid was changed.");
-
-        check(unchangedCharge.isPaid(),
-            "Original charge should still be fully paid.");
-
-        System.out.println(
-            "PASS: payment belonging to another charge is rejected."
-        );
+        return chargeId;
     }
 
-    private static StudentCharge loadCharge(ChargeRepository charges) {
-        return charges.findById(CHARGE_ID)
-            .orElseThrow(() -> new AssertionError(
-                "Saved charge was not found."
-            ));
+    private static int generatedId(StudentCharge charge) {
+        check(charge.getId() != null && charge.getId() > 0,
+            "Charge was not assigned a generated ID.");
+        return charge.getId();
+    }
+
+    private static StudentCharge loadCharge(
+            ChargeRepository charges, int chargeId) {
+        StudentCharge charge = charges.findById(chargeId)
+            .orElseThrow(() -> new AssertionError("Saved charge was not found."));
+
+        check(charge.getId() != null && charge.getId() == chargeId,
+            "Wrong charge ID.");
+        return charge;
+    }
+
+    private static void expectFailure(Runnable action, String expectedMessage) {
+        try {
+            action.run();
+        } catch (IllegalStateException exception) {
+            if (!expectedMessage.equals(exception.getMessage())) {
+                throw new AssertionError(
+                    "Unexpected failure. Expected: " + expectedMessage,
+                    exception
+                );
+            }
+            return;
+        }
+
+        throw new AssertionError("Expected failure: " + expectedMessage);
     }
 
     private static void check(boolean condition, String message) {

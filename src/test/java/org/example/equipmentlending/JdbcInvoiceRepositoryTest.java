@@ -18,7 +18,6 @@ public class JdbcInvoiceRepositoryTest {
     private static final int STAFF_ID = 2_000_000_031;
     private static final int ITEM_ID = 2_000_000_032;
     private static final int LOAN_ID = 2_000_000_033;
-    private static final int CHARGE_ID = 2_000_000_034;
     private static final int INVOICE_ID = 2_000_000_035;
     private static final int OTHER_INVOICE_ID = 2_000_000_036;
 
@@ -65,8 +64,6 @@ public class JdbcInvoiceRepositoryTest {
             "Test item ID is already in use.");
         check(loans.findById(LOAN_ID).isEmpty(),
             "Test loan ID is already in use.");
-        check(charges.findById(CHARGE_ID).isEmpty(),
-            "Test charge ID is already in use.");
         check(invoices.findById(INVOICE_ID).isEmpty(),
             "Test invoice ID is already in use.");
         check(invoices.findById(OTHER_INVOICE_ID).isEmpty(),
@@ -98,7 +95,6 @@ public class JdbcInvoiceRepositoryTest {
         );
 
         StudentCharge charge = new StudentCharge(
-            CHARGE_ID,
             loan,
             ChargeType.LATE_FEE,
             new BigDecimal("15.00"),
@@ -110,7 +106,8 @@ public class JdbcInvoiceRepositoryTest {
         items.save(item);
         loans.save(loan);
         charges.save(charge);
-
+        check(charge.getId() != null && charge.getId() > 0,"Charge was not assigned a generated ID.");
+        int chargeId = charge.getId();
         // 1. Insert an unsent invoice.
         Invoice invoice = new Invoice(INVOICE_ID, charge, issuedDate);
         invoices.save(invoice);
@@ -118,7 +115,7 @@ public class JdbcInvoiceRepositoryTest {
         Invoice loaded = loadInvoice(invoices);
 
         check(loaded.getId() == INVOICE_ID, "Wrong invoice ID.");
-        check(loaded.getCharge().getId() == CHARGE_ID, "Wrong charge ID.");
+        check(loaded.getCharge().getId() == chargeId, "Wrong charge ID.");
         check(issuedDate.equals(loaded.getIssuedDate()), "Wrong issued date.");
         check(!loaded.isSent(), "New invoice should be unsent.");
         check(loaded.getLastSendAttemptAt() == null,
@@ -162,7 +159,7 @@ public class JdbcInvoiceRepositoryTest {
         invoices.save(invoice);
         invoices.save(loaded);
 
-        check(countInvoicesForCharge(connection, CHARGE_ID) == 1,
+        check(countInvoicesForCharge(connection, chargeId) == 1,
             "Repeated saving created duplicate invoices.");
 
         System.out.println("PASS: repeated saving preserves one invoice.");
@@ -203,7 +200,7 @@ public class JdbcInvoiceRepositoryTest {
                 "Duplicate attempt changed the original issued date.");
             check(successfulAttempt.equals(original.getLastSendAttemptAt()),
                 "Duplicate attempt changed the original timestamp.");
-            check(countInvoicesForCharge(connection, CHARGE_ID) == 1,
+            check(countInvoicesForCharge(connection, chargeId) == 1,
                 "Expected exactly one invoice for the charge.");
 
             System.out.println(
