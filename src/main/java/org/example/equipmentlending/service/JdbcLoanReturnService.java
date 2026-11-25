@@ -3,9 +3,18 @@ package org.example.equipmentlending.service;
 import java.time.LocalDate;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.example.equipmentlending.model.MemberType;
+import org.example.equipmentlending.model.Staff;
+import org.example.equipmentlending.model.Student;
+import org.example.equipmentlending.repository.JdbcChargeRepository;
+import org.example.equipmentlending.repository.JdbcItemRepository;
+import org.example.equipmentlending.repository.JdbcLoanRepository;
+import org.example.equipmentlending.repository.JdbcStaffRepository;
+import org.example.equipmentlending.repository.JdbcStudentRepository;
 import org.example.equipmentlending.model.Loan;
 import org.example.equipmentlending.database.ConnectionFactory;
 import org.example.equipmentlending.model.ItemCondition;
@@ -39,6 +48,45 @@ public class JdbcLoanReturnService {
         if(returnCondition == null){
             throw new IllegalArgumentException("Must provide return condition.");
         }
-        throw new UnsupportedOperationException("Not implemented yet.");
+        try (Connection connection = connectionFactory.openConnection()) {
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            connection.setAutoCommit(false);
+            JdbcStudentRepository studentRepository = new JdbcStudentRepository(connection);
+            JdbcStaffRepository staffRepository = new JdbcStaffRepository(connection);
+            JdbcItemRepository itemRepository = new JdbcItemRepository(connection);
+            JdbcLoanRepository loanRepository = new JdbcLoanRepository(connection);
+            JdbcChargeRepository chargeRepository = new JdbcChargeRepository(connection);
+            try{
+                String sql = """
+                    SELECT student_id, item_id
+                    FROM loans
+                    WHERE id = ?
+                """;
+                int studentid;
+                int itemId;
+                try (PreparedStatement statement = connection.prepareStatement(sql) ) {
+                    statement.setInt(1, loanId);
+                    
+                    try (ResultSet result = statement.executeQuery()) {
+                        if (!result.next()) {
+                            throw new IllegalArgumentException("Loan not found: " + loanId);
+                        }
+                        studentid = result.getInt("student_id");
+                        itemId = result.getInt("item_id");
+                    }
+                }
+                throw new UnsupportedOperationException("Return logic not implemented yet.");
+            }
+            catch (SQLException | RuntimeException failure){
+                try {
+                    connection.rollback();
+                } catch (SQLException  rollebackfailure) {
+                    failure.addSuppressed(rollebackfailure);
+                }
+                throw failure;
+            }
+        } catch (SQLException exception) {
+            throw new IllegalStateException("Could not return loan " + loanId,exception);
+        }
     }
 }
