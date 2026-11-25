@@ -113,4 +113,5 @@ public class JdbcLoanRegistrationService {
             throw new IllegalStateException("Could not register loan " + loanId,exception);
         }
     }
+    
 }

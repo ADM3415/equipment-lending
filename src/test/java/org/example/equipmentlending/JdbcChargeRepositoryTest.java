@@ -155,7 +155,33 @@ public class JdbcChargeRepositoryTest {
         check(!loaded.isPaid(), "Partially paid charge must remain unpaid.");
 
         System.out.println("PASS: partial payment and its ID were restored.");
+        testAlteredPaymentDetails(connection, charges, chargeId);
+        // duplicate charge test
+Payment duplicatePayment = new Payment(
+    restoredPayment.getAmount(),
+    restoredPayment.getPaymentDate(),
+    restoredPayment.getReceiptReference(),
+    restoredPayment.getProcessedBy(),
+    restoredPayment.getId()
+);
 
+try {
+    loaded.addPayment(duplicatePayment);
+    throw new AssertionError("Duplicate payment ID was accepted.");
+} catch (IllegalArgumentException expected) {
+    check(
+        "Payment has already been recorded.".equals(expected.getMessage()),
+        "Unexpected rejection: " + expected.getMessage()
+    );
+}
+
+check(loaded.getPayments().size() == 1,
+    "Rejected duplicate changed the payment list.");
+
+check(loaded.getTotalPaid().compareTo(new BigDecimal("5.00")) == 0,
+    "Rejected duplicate changed the total paid.");
+
+System.out.println("PASS: separate payment objects with the same ID are rejected.");
         // 3. Repeated saves must not duplicate charges or payments.
         charges.save(charge);
         charges.save(loaded);
@@ -196,7 +222,36 @@ public class JdbcChargeRepositoryTest {
         check(fullyPaid.getRemainingAmount().compareTo(BigDecimal.ZERO) == 0,
             "Fully paid charge should have no remaining amount.");
         check(fullyPaid.isPaid(), "Charge should be fully paid.");
+        // Reject an older charge object that is missing a stored payment.
+Savepoint beforeStaleSave = connection.setSavepoint();
 
+try {
+    // "charge" has only the first payment.
+    // "fullyPaid" was loaded after both payments were saved.
+    expectFailure(
+        () -> charges.save(charge),
+        "Charge payment history is outdated. Reload the charge before saving."
+    );
+
+    StudentCharge afterRejectedSave = loadCharge(charges, chargeId);
+
+    check(afterRejectedSave.isPaid(),
+        "Rejected stale save changed the paid status.");
+
+    check(afterRejectedSave.getPayments().size() == 2,
+        "Rejected stale save changed the recorded payments.");
+
+    check(
+        afterRejectedSave.getTotalPaid()
+            .compareTo(new BigDecimal("15.00")) == 0,
+        "Rejected stale save changed the total paid."
+    );
+
+    System.out.println("PASS: outdated charge payment history is rejected.");
+} finally {
+    connection.rollback(beforeStaleSave);
+    connection.releaseSavepoint(beforeStaleSave);
+}
         var studentCharges = charges.findByStudentId(STUDENT_ID);
 
         check(studentCharges.size() == 1,
@@ -333,7 +388,125 @@ public class JdbcChargeRepositoryTest {
 
         return chargeId;
     }
+    private static void testAlteredPaymentDetails(
+        Connection connection,
+        ChargeRepository charges,
+        int chargeId) throws SQLException {
 
+    StudentCharge original = loadCharge(charges, chargeId);
+
+    check(original.getPayments().size() == 1,
+        "Run this test after saving the first partial payment.");
+
+    Payment stored = original.getPayments().get(0);
+
+    // Only used to construct an incorrect payment.
+    // This staff object does not need to be saved.
+    int differentStaffId =
+        stored.getProcessedBy().getId() == 1 ? 2 : 1;
+
+    Staff differentStaff = new Staff(
+        "Different Processing Staff", differentStaffId
+    );
+
+    Payment[] alteredPayments = {
+        new Payment(
+            stored.getAmount().add(new BigDecimal("1.00")),
+            stored.getPaymentDate(),
+            stored.getReceiptReference(),
+            stored.getProcessedBy(),
+            stored.getId()
+        ),
+        new Payment(
+            stored.getAmount(),
+            stored.getPaymentDate().plusDays(1),
+            stored.getReceiptReference(),
+            stored.getProcessedBy(),
+            stored.getId()
+        ),
+        new Payment(
+            stored.getAmount(),
+            stored.getPaymentDate(),
+            stored.getReceiptReference() + "-ALTERED",
+            stored.getProcessedBy(),
+            stored.getId()
+        ),
+        new Payment(
+            stored.getAmount(),
+            stored.getPaymentDate(),
+            stored.getReceiptReference(),
+            differentStaff,
+            stored.getId()
+        )
+    };
+
+    String[] labels = {
+        "amount",
+        "payment date",
+        "receipt reference",
+        "processing staff"
+    };
+
+    for (int i = 0; i < alteredPayments.length; i++) {
+        StudentCharge alteredCharge = new StudentCharge(
+            original.getId(),
+            original.getLoan(),
+            original.getChargeType(),
+            original.getAmount(),
+            original.getDescription()
+        );
+
+        alteredCharge.addPayment(alteredPayments[i]);
+
+        Savepoint beforeAttempt = connection.setSavepoint();
+
+        try {
+            expectFailure(
+                () -> charges.save(alteredCharge),
+                "Stored payment details do not match payment ID "
+                    + stored.getId()
+            );
+        } finally {
+            connection.rollback(beforeAttempt);
+            connection.releaseSavepoint(beforeAttempt);
+        }
+
+        StudentCharge reloaded = loadCharge(charges, chargeId);
+
+        check(reloaded.getPayments().size() == 1,
+            "Rejected save changed the payment count.");
+
+        Payment unchanged = reloaded.getPayments().get(0);
+
+        check(stored.getId().equals(unchanged.getId()),
+            "Payment ID changed.");
+
+        check(stored.getAmount().compareTo(unchanged.getAmount()) == 0,
+            "Stored payment amount changed.");
+
+        check(stored.getPaymentDate().equals(unchanged.getPaymentDate()),
+            "Stored payment date changed.");
+
+        check(stored.getReceiptReference()
+                .equals(unchanged.getReceiptReference()),
+            "Stored receipt reference changed.");
+
+        check(stored.getProcessedBy().getId()
+                == unchanged.getProcessedBy().getId(),
+            "Stored processing staff changed.");
+
+        check(reloaded.getTotalPaid()
+                .compareTo(original.getTotalPaid()) == 0,
+            "Total paid changed.");
+
+        check(reloaded.isPaid() == original.isPaid(),
+            "Paid status changed.");
+
+        System.out.println(
+            "PASS: altered payment " + labels[i] + " is rejected."
+        );
+    }
+}
     private static int generatedId(StudentCharge charge) {
         check(charge.getId() != null && charge.getId() > 0,
             "Charge was not assigned a generated ID.");

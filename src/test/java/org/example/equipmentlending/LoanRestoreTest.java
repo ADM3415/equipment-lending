@@ -39,6 +39,31 @@ public class LoanRestoreTest {
             System.out.println("PASS: rejected an active loan with a return date.");
         }
         LocalDate reportedLost = borrowed.plusDays(5);
+        String[] invalidDescriptions = { null, "", "   " };
+        for (String description : invalidDescriptions) {
+            try {
+                Loan.restore(
+                    9, student, item, registeredBy, borrowed, due,
+                    LoanStatus.CLOSED_LOST,
+                    null, processedBy, null, reportedLost, null,
+                    description
+                );
+
+                throw new AssertionError(
+                    "Lost loan accepted a null or blank description."
+                );
+            } catch (IllegalArgumentException expected) {
+                check(
+                    "Please describe the loss.".equals(expected.getMessage()),
+                    "Unexpected rejection: " + expected.getMessage()
+                );
+            }
+        }
+
+        System.out.println(
+            "PASS: lost loans reject null and blank descriptions."
+        );
+        
         Loan lostLoan = Loan.restore(8, student, item, registeredBy, borrowed, due,
                 LoanStatus.CLOSED_LOST, null, processedBy, null, reportedLost, null,
                 "Laptop reported missing.");

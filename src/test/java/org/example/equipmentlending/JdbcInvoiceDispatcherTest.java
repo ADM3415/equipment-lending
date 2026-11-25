@@ -1,12 +1,24 @@
 package org.example.equipmentlending;
 
 import java.math.BigDecimal;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.time.LocalDate;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Proxy;
+
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.example.equipmentlending.database.ConnectionFactory;
 import org.example.equipmentlending.model.*;
@@ -25,10 +37,9 @@ public class JdbcInvoiceDispatcherTest {
 
     public static void main(String[] args) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
-
-        // If setup fails, it rolls back and no cleanup is attempted.
+        testConcurrentSending(factory);
         int chargeId = createFixtures(factory);
-
+        // If setup fails, it rolls back and no cleanup is attempted.
         try {
             AtomicInteger sendCount = new AtomicInteger();
 
@@ -115,7 +126,176 @@ public class JdbcInvoiceDispatcherTest {
 
         System.out.println("All invoice dispatcher tests passed.");
     }
+    // ---------------------------------
+    private static void testConcurrentSending(ConnectionFactory factory)
+        throws Exception {
 
+        int chargeId = createFixtures(factory);
+
+        CountDownLatch firstSenderEntered = new CountDownLatch(1);
+        CountDownLatch releaseFirstSender = new CountDownLatch(1);
+        CountDownLatch secondLockAttempted = new CountDownLatch(1);
+        CountDownLatch secondSenderEntered = new CountDownLatch(1);
+
+        AtomicBoolean secondSawSent = new AtomicBoolean(false);
+
+        RuntimeException sendFailure =
+            new IllegalStateException("Simulated concurrent send failure.");
+
+        InvoiceSender firstSender = invoice -> {
+            check(!invoice.isSent(),
+                "Concurrency test must start with an unsent invoice.");
+
+            firstSenderEntered.countDown();
+
+            try {
+                if (!releaseFirstSender.await(30, TimeUnit.SECONDS)) {
+                    throw new AssertionError(
+                        "Timed out waiting to release the first sender."
+                    );
+                }
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException(
+                    "First sender was interrupted.", exception
+                );
+            }
+        };
+
+        InvoiceSender secondSender = invoice -> {
+            secondSawSent.set(invoice.isSent());
+            secondSenderEntered.countDown();
+            throw sendFailure;
+        };
+
+        // Observe when the second dispatcher attempts its locking query.
+        ConnectionFactory observedFactory = new ConnectionFactory() {
+            @Override
+            public Connection openConnection() throws SQLException {
+                return observeInvoiceLock(
+                    factory.openConnection(), secondLockAttempted
+                );
+            }
+        };
+
+        try {
+            check(!loadInvoice(factory).isSent(),
+                "Fixture invoice must initially be unsent.");
+
+            try (ExecutorService executor =
+                    Executors.newFixedThreadPool(2)) {
+
+                try {
+                    Future<?> first = executor.submit(() ->
+                        new JdbcInvoiceDispatcher(factory, firstSender)
+                            .sendInvoice(INVOICE_ID)
+                    );
+
+                    check(firstSenderEntered.await(10, TimeUnit.SECONDS),
+                        "First dispatch did not reach its sender.");
+
+                    Future<?> second = executor.submit(() ->
+                        expectSendFailure(
+                            new JdbcInvoiceDispatcher(
+                                observedFactory, secondSender
+                            ),
+                            sendFailure
+                        )
+                    );
+
+                    check(secondLockAttempted.await(10, TimeUnit.SECONDS),
+                        "Second dispatch did not attempt the invoice lock.");
+
+                    check(
+                        !secondSenderEntered.await(1, TimeUnit.SECONDS),
+                        "Second sender ran before the first transaction finished."
+                    );
+
+                    releaseFirstSender.countDown();
+
+                    first.get(30, TimeUnit.SECONDS);
+                    second.get(30, TimeUnit.SECONDS);
+
+                    check(secondSenderEntered.getCount() == 0,
+                        "Second dispatch never reached its sender.");
+
+                    check(secondSawSent.get(),
+                        "Second dispatch loaded stale unsent state.");
+
+                    Invoice stored = loadInvoice(factory);
+
+                    check(stored.isSent(),
+                        "Failed concurrent send erased the successful status.");
+
+                    check(stored.getLastSendAttemptAt() != null,
+                        "Send attempt timestamp is missing.");
+
+                    System.out.println(
+                        "PASS: concurrent failed send preserves successful status."
+                    );
+                } finally {
+                    // Release the worker even if an assertion fails.
+                    releaseFirstSender.countDown();
+                }
+            }
+        } finally {
+            deleteFixtures(factory, chargeId);
+        }
+    }
+
+    private static Connection observeInvoiceLock(
+            Connection realConnection,
+            CountDownLatch lockAttempted) {
+
+        return (Connection) Proxy.newProxyInstance(
+            Connection.class.getClassLoader(),
+            new Class<?>[] { Connection.class },
+            (proxy, method, args) -> {
+                try {
+                    Object result = method.invoke(realConnection, args);
+
+                    if (method.getName().equals("prepareStatement")
+                            && args != null
+                            && args.length > 0
+                            && args[0] instanceof String sql) {
+
+                        String normalized = sql.replaceAll("\\s+", " ")
+                            .toUpperCase(java.util.Locale.ROOT);
+
+                        if (normalized.contains("FROM INVOICES")
+                                && normalized.contains("FOR UPDATE")) {
+
+                            PreparedStatement realStatement =
+                                (PreparedStatement) result;
+
+                            return Proxy.newProxyInstance(
+                                PreparedStatement.class.getClassLoader(),
+                                new Class<?>[] { PreparedStatement.class },
+                                (statementProxy, statementMethod, statementArgs) -> {
+                                    if (statementMethod.getName()
+                                            .equals("executeQuery")) {
+                                        lockAttempted.countDown();
+                                    }
+
+                                    try {
+                                        return statementMethod.invoke(
+                                            realStatement, statementArgs
+                                        );
+                                    } catch (InvocationTargetException exception) {
+                                        throw exception.getCause();
+                                    }
+                                }
+                            );
+                        }
+                    }
+
+                    return result;
+                } catch (InvocationTargetException exception) {
+                    throw exception.getCause();
+                }
+            }
+        );
+    }
     private static int createFixtures(ConnectionFactory factory)
         throws SQLException {
 

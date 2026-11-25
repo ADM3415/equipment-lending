@@ -1,12 +1,15 @@
 package org.example.equipmentlending.service;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.example.equipmentlending.database.ConnectionFactory;
 import org.example.equipmentlending.model.Invoice;
 import org.example.equipmentlending.notification.InvoiceSender;
 import org.example.equipmentlending.repository.JdbcInvoiceRepository;
+
 
 public class JdbcInvoiceDispatcher {
     private final ConnectionFactory connectionFactory;
@@ -21,6 +24,22 @@ public class JdbcInvoiceDispatcher {
         this.connectionFactory = connectionFactory;
         this.invoiceSender = invoiceSender;
     }
+    private void lockInvoice(Connection connection, int invoiceId) throws SQLException {
+        String sql = """
+            SELECT id
+            FROM invoices
+            WHERE id = ?
+            FOR UPDATE
+        """;
+        try (PreparedStatement statement = connection.prepareStatement(sql) ) {
+            statement.setInt(1, invoiceId);
+            try (ResultSet result = statement.executeQuery()) {
+                if (!result.next()) {
+                    throw new IllegalArgumentException("Invoice not found: " + invoiceId);
+                }
+            }
+        }
+    }
     public void sendInvoice(int invoiceId){
         if( invoiceId <= 0){
             throw new IllegalArgumentException("invoice id must be positive.");
@@ -29,6 +48,7 @@ public class JdbcInvoiceDispatcher {
             connection.setAutoCommit(false);
             InvoiceSendException invoiceSendException = null;
             try{ 
+                lockInvoice(connection, invoiceId);
                 JdbcInvoiceRepository invoiceRepository = new JdbcInvoiceRepository(connection);
                 Invoice invoice = invoiceRepository.findById(invoiceId)
                     .orElseThrow(() -> new IllegalArgumentException("Invoice not found: " + invoiceId));

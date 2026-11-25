@@ -1,15 +1,20 @@
 package org.example.equipmentlending.repository;
 
-import java.sql.Statement;
 import java.math.BigDecimal;
+
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.example.equipmentlending.model.ChargeType;
 import org.example.equipmentlending.model.Loan;
@@ -87,6 +92,31 @@ public class JdbcChargeRepository implements ChargeRepository{
         }
 
         return charge;
+    }
+    private void verifyPaymentHistory(StudentCharge charge) throws SQLException{
+        String sql = """
+            SELECT id
+            FROM payments
+            WHERE charge_id = ?
+            FOR UPDATE
+        """;
+        Set<Integer> paymentIds = new HashSet<>();
+        for(Payment payment : charge.getPayments()){
+            if(payment.getId() != null){
+                paymentIds.add(payment.getId());
+            }
+        }
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, charge.getId());
+            try (ResultSet payments = statement.executeQuery()) {
+                while (payments.next()) {
+                    int storedPaymentId = payments.getInt("id");
+                    if (!paymentIds.contains(storedPaymentId)) {
+                        throw new IllegalStateException("Charge payment history is outdated. Reload the charge before saving.");
+                    }
+                }
+            }
+        }
     }
     @Override 
     public Optional<StudentCharge> findById(int chargeId){
@@ -185,9 +215,10 @@ public class JdbcChargeRepository implements ChargeRepository{
             throw new IllegalArgumentException("Charge must not be null.");
         }
         String sql = """
-            SELECT charge_id
+            SELECT charge_id, amount, payment_date, receipt_reference, processed_by_id
             FROM payments
             WHERE id = ?
+            FOR UPDATE
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             if(payment.getId() == null){
@@ -203,6 +234,22 @@ public class JdbcChargeRepository implements ChargeRepository{
                 if(charge.getId() != storedChargeId ){
                     throw new IllegalStateException("Charge id and stored id dont match.");
                 }
+                BigDecimal amount = result.getBigDecimal("amount");
+                if(amount.compareTo(payment.getAmount()) != 0){
+                    throw new IllegalStateException("Stored payment details do not match payment ID "+payment.getId());
+                }
+                LocalDate paymentDate = result.getObject("payment_date",LocalDate.class);
+                if(!paymentDate.equals(payment.getPaymentDate())){
+                    throw new IllegalStateException("Stored payment details do not match payment ID "+payment.getId());
+                }
+                int processedById = result.getInt("processed_by_id");
+                if(processedById != payment.getProcessedBy().getId()){
+                    throw new IllegalStateException("Stored payment details do not match payment ID "+payment.getId());
+                }
+                String receiptReference = result.getString("receipt_reference");
+                if(!receiptReference.equals(payment.getReceiptReference())){
+                    throw new IllegalStateException("Stored payment details do not match payment ID "+payment.getId());
+                }
             }
         }
         catch (SQLException exception){
@@ -216,7 +263,6 @@ public class JdbcChargeRepository implements ChargeRepository{
             WHERE id = ?
             FOR UPDATE
             """;
-
         try (PreparedStatement statement =
                 connection.prepareStatement(lookupSql)) {
 
@@ -230,7 +276,7 @@ public class JdbcChargeRepository implements ChargeRepository{
                 }
             }
         }
-
+        verifyPaymentHistory(charge);
         String updateSql = """
             UPDATE student_charges
             SET loan_id = ?,

@@ -90,6 +90,15 @@ public class StudentCharge {
         if(payments.contains(payment)) {
             throw new IllegalArgumentException("Payment has already been recorded.");
         }
+        if (payment.getId() != null) {
+            for (Payment existingPayment : payments) {
+                if (payment.getId().equals(existingPayment.getId())) {
+                    throw new IllegalArgumentException(
+                        "Payment has already been recorded."
+                    );
+                }
+            }
+        }
         this.payments.add(payment);
         this.isPaid = newTotal.compareTo(amount) == 0;
     }
